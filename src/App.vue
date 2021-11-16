@@ -1,43 +1,26 @@
 <template>
   <div id="app">
-    <i class="fas fa-align-left"></i>
-    <l-map ref="myMap" :zoom="zoom" :center="center" :options="options" style="width: 100vw; height: 100vh;">
+    <Navbar/>
+    <!-- <l-map ref="myMap" :zoom="zoom" :center="center" :options="options" style="width: 100vw; height: 100vh;">
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker ref="location" :lat-lng="center">
-          <l-icon
-            icon-url="icon.type.gold"
-            :shadow-url="icon.shadowUrl"
-            :icon-size="icon.iconSize"
-            :icon-anchor="icon.iconAnchor"
-            :popup-anchor="icon.popupAnchor"
-            :shadow-size="icon.shadowSize"
-          >
+          <l-icon>
+          <div class="headline">
+            {{ '99' }}
+          </div>
           </l-icon>
         <l-popup>
           你的位置
         </l-popup>
       </l-marker>
-    </l-map>
+    </l-map> -->
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import jsSHA from "jssha";
+import Navbar from "./components/navbar.vue"
 
-const GetAuthorizationHeader = () => {
-  const APP_ID = process.env.VUE_APP_APP_ID;
-  const APP_KEY = process.env.VUE_APP_APP_KEY;
 
-  const GMTString = new Date().toGMTString();
-  let ShaObj = new jsSHA('SHA-1', 'TEXT');
-  ShaObj.setHMACKey(APP_KEY, 'TEXT');
-  ShaObj.update('x-date: ' + GMTString);
-  const HMAC = ShaObj.getHMAC('B64');
-  const Authorization = 'hmac username="' + APP_ID + '", algorithm="hmac-sha1", headers="x-date", signature="' + HMAC + '"';
-
-  return { 'Authorization': Authorization, 'X-Date': GMTString };
-}
 
 export default {
   name: 'App',
@@ -68,17 +51,7 @@ export default {
   },
   methods: {
     getData() {
-      const url = "https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot?$top=30&$format=JSON";
-      axios({
-        method: 'get',
-        url: url,
-        headers: GetAuthorizationHeader()
-      })
-      .then((response) => {
-        console.log(response);
-      }).catch((error) => {
-        console.log(error)
-      })
+      console.log("準備要資料")
     },
     setMap() {
       this.$nextTick(() => {
@@ -91,7 +64,7 @@ export default {
     }
   },
   components: {
-
+    Navbar
   },
   created() {
     // 創立元件要資料
@@ -99,7 +72,7 @@ export default {
   },
   mounted() {
     // 地圖創完套資料
-    this.setMap();
+    // this.setMap();
   }
 }
 
@@ -117,7 +90,6 @@ export default {
   margin-top: 60px;
   width: 300px;
   height: 300px;
-  background-color: $header;
 }
 </style>
 

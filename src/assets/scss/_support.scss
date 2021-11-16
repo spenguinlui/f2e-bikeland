@@ -1,0 +1,143 @@
+// RWD
+@mixin full-screen {
+  @media screen and (min-width: 1280px) {
+    @content;
+  }
+}
+@mixin screen-up {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+@mixin screen {
+  @media screen and (min-width: 768px) and (max-width: 1279px) {
+    @content;
+  }
+}
+@mixin pad-up {
+  @media screen and (min-width: 481px) {
+    @content;
+  }
+}
+@mixin pad {
+  @media screen and (min-width: 481px) and (max-width: 767px) {
+    @content;
+  }
+}
+@mixin mobile {
+  @media(max-width: 480px){
+    @content;
+  }
+}
+
+// flex-box
+@mixin flex-col($i) {
+  flex: 0 0 ((100% / 12) * $i);
+}
+
+@mixin flex-row-center-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+@mixin flex-row-space-between-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+@mixin flex-row-start-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+@mixin flex-column-center-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+@mixin flex-column-center-baseline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+}
+@mixin flex-column-start-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+@mixin flex-column-start-space-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: space-between;
+}
+
+// 文字
+@mixin font-h1($b: 1) {
+  font-size: $font-size-h1;
+  line-height: $font-size-h1 * 1.2;
+  letter-spacing: 0.12em;
+  @if $b != 0 { font-weight: bold }
+}
+@mixin font-h2($b: 1) {
+  font-size: $font-size-h2;
+  line-height: $font-size-h2 * 1.2;
+  letter-spacing: 0.12em;
+  @if $b != 0 { font-weight: bold }
+}
+@mixin font-h3($b: 1) {
+  font-size: $font-size-h3;
+  line-height: $font-size-h3 * 1.2;
+  letter-spacing: 0.12em;
+  @if $b != 0 { font-weight: bold }
+}
+@mixin font-h4($b: 1) {
+  font-size: $font-size-h4;
+  line-height: $font-size-h4 * 1.2;
+  letter-spacing: 0.12em;
+  @if $b != 0 { font-weight: bold }
+}
+@mixin font-h5($b: 1) {
+  font-size: $font-size-h5;
+  line-height: $font-size-h5 * 1.2;
+  letter-spacing: 0.12em;
+  @if $b != 0 { font-weight: bold }
+}
+// 內文
+@mixin font-content($b: 0) {
+  font-size: $font-size-content;
+  line-height: $font-size-content * 1.56;
+  @if $b != 0 { font-weight: bold }
+}
+// 一般按鈕
+@mixin font-button($b: 0) {
+  font-size: $font-size-button;
+  line-height: $font-size-button * 1.2;
+  @if $b != 0 { font-weight: bold }
+}
+// tag
+@mixin font-caption($b: 0) {
+  font-size: $font-size-caption;
+  line-height: $font-size-caption * 1.2;
+  letter-spacing: 0.05em;
+  @if $b != 0 { font-weight: bold }
+}
+
+// button
+@mixin btn($radius) {
+  @include flex-row-center-center;
+  @include font-button;
+  border-radius: #{$radius}px;
+  cursor: pointer;
+}
+@mixin btn-outline($radius: 8) {
+  @include btn($radius);
+  background-color: $grey-100;
+  color: $primary-400;
+}
