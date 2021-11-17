@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <Navbar/>
-    <ListBoard/>
+    <template v-if="false">
+      <ListBoard/>
+    </template>
+    <template v-if="true">
+      <ListImgBoard/>
+    </template>
     <!-- <l-map ref="myMap" :zoom="zoom" :center="center" :options="options" style="width: 100vw; height: 100vh;">
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker ref="location" :lat-lng="center">
@@ -15,12 +20,17 @@
         </l-popup>
       </l-marker>
     </l-map> -->
+    <div v-show="true">
+      <Content/>
+    </div>
   </div>
 </template>
 
 <script>
 import Navbar from "./components/navbar.vue";
 import ListBoard from "./components/list_board.vue";
+import ListImgBoard from "./components/list_img_board.vue";
+import Content from "./components/content.vue";
 
 
 export default {
@@ -66,7 +76,9 @@ export default {
   },
   components: {
     Navbar,
-    ListBoard
+    ListBoard,
+    ListImgBoard,
+    Content
   },
   created() {
     // 創立元件要資料

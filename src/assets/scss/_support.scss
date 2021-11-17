@@ -88,44 +88,46 @@
 @mixin font-h2($b: 1) {
   font-size: $font-size-h2;
   line-height: $font-size-h2 * 1.2;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   @if $b != 0 { font-weight: bold }
 }
 @mixin font-h3($b: 1) {
   font-size: $font-size-h3;
   line-height: $font-size-h3 * 1.2;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.07em;
   @if $b != 0 { font-weight: bold }
 }
 @mixin font-h4($b: 1) {
   font-size: $font-size-h4;
   line-height: $font-size-h4 * 1.2;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.05em;
   @if $b != 0 { font-weight: bold }
 }
 @mixin font-h5($b: 1) {
   font-size: $font-size-h5;
   line-height: $font-size-h5 * 1.2;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   @if $b != 0 { font-weight: bold }
 }
 // 內文
 @mixin font-content($b: 0) {
   font-size: $font-size-content;
   line-height: $font-size-content * 1.56;
+  letter-spacing: 0.03em;
   @if $b != 0 { font-weight: bold }
 }
 // 一般按鈕
 @mixin font-button($b: 0) {
   font-size: $font-size-button;
   line-height: $font-size-button * 1.2;
+  letter-spacing: 0.03em;
   @if $b != 0 { font-weight: bold }
 }
 // tag
 @mixin font-caption($b: 0) {
   font-size: $font-size-caption;
   line-height: $font-size-caption * 1.2;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.01em;
   @if $b != 0 { font-weight: bold }
 }
 
@@ -192,7 +194,7 @@
 }
 
 // 隱藏過多文字
-@mixin ellipsis-text($n) {
+@mixin ellipsis-text($n: 1) {
   overflow: hidden;
   display: -webkit-box;
   text-overflow: ellipsis;

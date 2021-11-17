@@ -1,7 +1,7 @@
 <template>
   <div class="card-container">
-    <div class="card-tilte">
-      <div class="card-title-text">太原廣場</div>
+    <div class="card-title">
+      <div class="card-title-text"><span>太原廣場太原廣場太原廣場太原廣場太原廣場太原廣場</span></div>
       <div class="card-m-subtitle">
         <div class="left-btn unavailable">可借可還</div>
         <div class="right-msg"><i class="fas fa-map-marker-alt"></i>距離25公尺</div>
@@ -40,47 +40,45 @@
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
   .card-container {
-    @include flex-column-center-center;
-    padding: 20px 0;
-    border-bottom: 1px solid $grey-300;
-    .card-tilte {
-      width: 100%;
-      color: $primary-500;
-      text-align: left;
+    @include card-container;
+    .card-title {
+      @include card-title;
       @include mobile {
         @include flex-row-space-between-center;
       }
       .card-title-text {
-        @include font-h5(1);
-        @include ellipsis-text(15);
         @include mobile {
-          @include ellipsis-text(9);
+          max-width: 150px;
           margin-right: 8px;
+        }
+        @media screen and (max-width: 380px) {
+          max-width: 120px;
         }
       }
       .card-m-subtitle {
-        @include mobile {
-          @include flex-row-space-between-center;
-          flex-grow: 1;
-          .left-btn {
-            @include btn-outline(accent);
+        @include flex-row-space-between-center;
+        flex-grow: 1;
+        .left-btn {
+          @include btn-outline(accent);
+          padding: 1px 8px;
+          border-radius: 4px;
+          &.focus {
+            @include btn-outline(alert);
             padding: 1px 8px;
             border-radius: 4px;
-            &.focus {
-              @include btn-outline(alert);
-              padding: 1px 8px;
-              border-radius: 4px;
-            }
-            &.unavailable {
-              @include btn-outline(grey);
-              padding: 1px 8px;
-              border-radius: 4px;
-            }
           }
-          .right-msg {
-            @include font-caption;
-            color: $grey-500;
+          &.unavailable {
+            @include btn-outline(grey);
+            padding: 1px 8px;
+            border-radius: 4px;
           }
+        }
+        .right-msg {
+          @include font-caption;
+          color: $grey-500;
+        }
+        @include pad-up {
+          display: none;
         }
       }
     }

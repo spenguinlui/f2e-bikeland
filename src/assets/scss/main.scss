@@ -3,7 +3,79 @@
 @import "./variable";
 @import "./support";
 
+* {
+  box-sizing: border-box;
+  font-family: Futura, "Noto Sans CJK TC", 'Noto Serif TC', sans-serif;
+}
+
 svg[class*="fa-"] {
   margin-right: 4px;
 }
 
+@mixin card-container {
+  @include flex-column-center-center;
+  padding: 20px 0;
+  border-bottom: 1px solid $grey-300;
+}
+
+@mixin card-title {
+  width: 100%;
+  color: $primary-500;
+  text-align: left;
+  .card-title-text {
+    max-width: 240px;
+    > span {
+      @include font-h5(1);
+      @include ellipsis-text;
+    }
+  }
+}
+
+@mixin card-img {
+  width: 100%;
+  height: $card-img-height;
+  @include mobile {
+    height: $card-img-m-height;
+  }
+  .brand {
+    @include flex-row-center-center;
+    border: 1px solid $primary-400;
+    border-radius: 8px;
+    width: 100%;
+    height: inherit;
+    &:hover {
+      background-color: $primary-100;
+    }
+  }
+  > img {
+    width: 100%;
+  }
+}
+
+@mixin expand-btn($showmode: 0) {
+  @include flex-row-center-center;
+  position: absolute;
+  top: -16px;
+  left: calc(50% - 24px);
+  width: 48px;
+  height: 16px;
+  font-size: 10px;
+  text-align: center;
+  background-color: $grey-100;
+  box-shadow: 0px -2px 4px rgba(118, 118, 118, 0.3);
+  border-radius: 6px 6px 0px 0px;
+  cursor: pointer;
+  > svg {
+    margin: 0;
+  }
+  @if $showmode == 0 {
+    @include pad-up {
+      display: none;
+    }
+  }
+  @if $showmode != 0 {
+    @include mobile {
+      display: none;
+    }
+  }
+}
