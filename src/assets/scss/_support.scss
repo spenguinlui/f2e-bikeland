@@ -132,12 +132,72 @@
 // button
 @mixin btn($radius) {
   @include flex-row-center-center;
-  @include font-button;
+  @include font-button(1);
   border-radius: #{$radius}px;
   cursor: pointer;
 }
-@mixin btn-outline($radius: 8) {
-  @include btn($radius);
-  background-color: $grey-100;
-  color: $primary-400;
+
+@mixin btn-outline($color: primary) {
+  @include btn(8);
+  padding: 8px 16px;
+  @if $color == primary {
+    border: 1px solid $primary-300;
+    background-color: $grey-100;
+    color: $primary-400;
+    &:hover {
+      background-color: $primary-100;
+    }
+    &:focus {
+      border: 3px solid $primary-300;
+    }
+  }
+  @if $color == accent {
+    border: 1px solid $accent-300;
+    background-color: $grey-100;
+    color: $accent-400;
+    &:hover {
+      background-color: $accent-100;
+    }
+    &:focus {
+      border: 3px solid $accent-300;
+    }
+  }
+  @if $color == alert {
+    border: 1px solid $alert-300;
+    background-color: $grey-100;
+    color: $alert-400;
+    &:hover {
+      background-color: $alert-100;
+    }
+    &:focus {
+      border: 3px solid $alert-300;
+    }
+  }
+  @if $color == grey {
+    border: 1px solid $grey-300;
+    background-color: $grey-100;
+    color: $grey-400;
+    &:hover {
+      background-color: $grey-100;
+    }
+    &:focus {
+      border: 3px solid $grey-300;
+    }
+  }
+  &:disabled {
+    background-color: $grey-100;
+    color: $grey-300;
+    border: 1px solid $grey-300;
+  }
 }
+
+// 隱藏過多文字
+@mixin ellipsis-text($n) {
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $n;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+

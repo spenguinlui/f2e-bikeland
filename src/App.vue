@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navbar/>
+    <ListBoard/>
     <!-- <l-map ref="myMap" :zoom="zoom" :center="center" :options="options" style="width: 100vw; height: 100vh;">
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker ref="location" :lat-lng="center">
@@ -18,8 +19,8 @@
 </template>
 
 <script>
-import Navbar from "./components/navbar.vue"
-
+import Navbar from "./components/navbar.vue";
+import ListBoard from "./components/list_board.vue";
 
 
 export default {
@@ -64,7 +65,8 @@ export default {
     }
   },
   components: {
-    Navbar
+    Navbar,
+    ListBoard
   },
   created() {
     // 創立元件要資料

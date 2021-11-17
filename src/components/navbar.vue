@@ -55,13 +55,13 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 35px;
+    height: $nav-bar-m-height;
     padding: 0 20px;
     @include pad {
       padding: 0 20px;
     }
     @include screen-up {
-      height: 70px;
+      height: $nav-bar-height;
       padding: 0 40px;
     }
     @include full-screen {
@@ -84,9 +84,7 @@
         gap: 16px;
       }
       .btn-outline {
-        @include btn-outline;
-        border: 1px solid $primary-300;
-        padding: 8px 16px;
+        @include  btn-outline;
       }
     }
     .nav-m-trigger {
@@ -103,7 +101,7 @@
     width: 100%;
     position: fixed;
     left: 0;
-    top: 35px;
+    top: $nav-bar-m-height;
     cursor: pointer;
     @include screen-up {
       display: none;
