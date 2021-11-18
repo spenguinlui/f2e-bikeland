@@ -103,6 +103,7 @@
     left: 0;
     top: $nav-bar-m-height;
     cursor: pointer;
+    z-index: 10;
     @include screen-up {
       display: none;
     }

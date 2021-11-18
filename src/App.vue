@@ -20,9 +20,8 @@
         </l-popup>
       </l-marker>
     </l-map> -->
-    <div v-show="true">
-      <Content/>
-    </div>
+    <Content/>
+    <MContent/> 
   </div>
 </template>
 
@@ -31,7 +30,7 @@ import Navbar from "./components/navbar.vue";
 import ListBoard from "./components/list_board.vue";
 import ListImgBoard from "./components/list_img_board.vue";
 import Content from "./components/content.vue";
-
+import MContent from "./components/m_content.vue";
 
 export default {
   name: 'App',
@@ -78,7 +77,8 @@ export default {
     Navbar,
     ListBoard,
     ListImgBoard,
-    Content
+    Content,
+    MContent
   },
   created() {
     // 創立元件要資料

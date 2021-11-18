@@ -77,7 +77,7 @@
     box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
     border-radius: 8px;
     padding: 28px 32px;
-    z-index: 1;
+    z-index: 5;
     .expand-btn {
       @include expand-btn;
     }

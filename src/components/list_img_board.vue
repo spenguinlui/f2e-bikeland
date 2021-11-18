@@ -6,11 +6,11 @@
         <i class="fas fa-sort-amount-down"></i>排序
       </div>
     </div>
-    <div class="scroll-row-container" >
-        <ImgCard/>
-        <ImgCard/>
-        <ImgCard/>
-        <ImgCard/>
+    <div v-if="true" class="scroll-row-container" >
+      <ImgCard/>
+      <ImgCard/>
+      <ImgCard/>
+      <ImgCard/>
     </div>
   </div>
 </template>
@@ -51,7 +51,7 @@
     }
     @include mobile {
       width: 100%;
-      height: 213px;
+      height: 233px;
       bottom: 0;
       padding-bottom: 0;
     }
@@ -59,7 +59,7 @@
     box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
     border-radius: 8px;
     padding: 28px 32px;
-    z-index: 1;
+    z-index: 5;
     .tool-bar {
       @include flex-row-space-between-center;
       gap: 10px;
@@ -73,7 +73,7 @@
       overflow: auto;
       height: 87%;
       @include mobile {
-        @include flex-row-center-center;
+        @include flex-row-start-center;
         height: auto;
         gap: 10px;
       }

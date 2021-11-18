@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card-container">
+    <div class="card-container" @click="() => { contentShow = !contentShow }">
       <div class="card-img">
         <!-- <img src="" alt=""> -->
         <div class="brand"><img src="../assets/images/brand-dark.png" alt="找不到圖片"></div>
@@ -13,6 +13,7 @@
         <div class="card-tag-container">
           <div class="card-tag">都會公園類</div>
           <div class="card-tag">自然類</div>
+          <!-- mobile 第三張卡要隱藏 -->
         </div>
         <div class="card-web-btn"><i class="fas fa-globe-americas"></i></div>
       </div>
@@ -24,7 +25,7 @@
   export default {
     data () {
       return {
-        
+        contentShow: false
       }
     },
     methods: {
@@ -35,6 +36,7 @@
 
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
+
   .card-container {
     @include card-container;
     .card-img {
@@ -103,6 +105,81 @@
         &:disabled {
           border: 1px solid $grey-300;
           color: $grey-300;
+        }
+      }
+    }
+  }
+
+  @include mobile {
+    .card-container {
+      @include card-container;
+      border-bottom: 0px;
+      width: 154px;
+      height: 123px;
+      margin-top: 20px;
+      .card-img {
+        width: 100%;
+        height: $card-img-m-height;
+        .brand {
+          @include flex-row-center-center;
+          border: 1px solid $primary-400;
+          border-radius: 8px;
+          width: 100%;
+          height: inherit;
+          &:hover {
+            background-color: $primary-100;
+          }
+          > img {
+            width: 80%;
+          }
+        }
+      }
+      .card-title {
+        @include flex-row-space-between-center;
+        width: 100%;
+        color: $primary-500;
+        text-align: left;
+        .card-title-text {
+          margin-top: 2px;
+          max-width: 98px;
+          > span {
+            @include font-caption(1);
+            @include ellipsis-text;
+          }
+        }
+        .card-title-msg {
+          font-size: 10px;
+          line-height: 18px;
+          color: $grey-400;
+          font-weight: 500;
+        }
+      }
+      .card-footer {
+        @include flex-row-space-between-center;
+        width: 100%;
+        .card-tag-container {
+          @include flex-row-start-center;
+          flex-grow: 1;
+          gap: 2px;
+          .card-tag {
+            font-size: 9px;
+            line-height: 15px;
+            font-weight: 500;
+            color: $grey-100;
+            background-color: $primary-400;
+            border-radius: 20px;
+            padding: 4px 12px;
+            cursor: pointer;
+            &:hover {
+              background-color: $primary-500;
+            }
+            &:focus {
+              border: 2px solid $primary-300;
+            }
+          }
+        }
+        .card-web-btn {
+          display: none;
         }
       }
     }

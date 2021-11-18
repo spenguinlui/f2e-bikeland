@@ -41,6 +41,7 @@
     position: fixed;
     left: 0;
     bottom: 0;
+    z-index: 1;
     &.hide {
       bottom: -$content-height;
     }
@@ -91,6 +92,11 @@
           width: 80%;
         }
       }
+    }
+  }
+  @include mobile {
+    .content-container {
+      display: none;
     }
   }
 </style>
