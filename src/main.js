@@ -1,13 +1,17 @@
 import Vue from 'vue';
 import App from './App.vue';
 
+import Vuex from 'vuex';
+import { storeObject } from './store';
+
 import { LMap, LTileLayer, LMarker, LPopup, LIcon } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 
-
+Vue.use(Vuex);
+const store = new Vuex.Store(storeObject);
 
 Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
@@ -28,5 +32,6 @@ Icon.Default.mergeOptions({
 Vue.config.productionTip = false
 
 new Vue({
+  store,
   render: h => h(App),
 }).$mount('#app')

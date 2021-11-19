@@ -12,13 +12,13 @@
       </div>
     </div>
     <div class="scroll-container">
-      <div class="card-outsid-container" v-if="true">
+      <div class="card-outsid-container" v-if="targetType === 'bike'">
         <BikeSpotCard/>
         <BikeSpotCard/>
         <BikeSpotCard/>
         <BikeSpotCard/>
       </div>
-      <div class="card-outsid-container" v-if="false">
+      <div class="card-outsid-container" v-if="targetType === 'route'">
         <RouteCard/>
         <RouteCard/>
         <RouteCard/>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   import SearchBar from "./search_bar.vue";
   import BikeSpotCard from "./bike_spot_card.vue";
   import RouteCard from "./route_card.vue";
@@ -38,6 +40,9 @@
       return {
         containerExpand: false
       }
+    },
+    computed: {
+      ...mapGetters(['targetType'])
     },
     components: {
       SearchBar,

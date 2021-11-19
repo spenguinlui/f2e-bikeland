@@ -1,7 +1,7 @@
 <template>
-  <div :class="contentExpand ? 'm-content-container' : 'm-content-container hide'">
-    <div @click="() => { contentExpand = false }" v-if="contentExpand" class="expand-btn">
-      <div v-show="contentExpand"><i class="fas fa-angle-double-down"></i></div>
+  <div class="m-content-container" :class="{ hide: !expandMContent }">
+    <div @click="hideMContent" v-show="expandMContent" class="expand-btn">
+      <div><i class="fas fa-angle-double-down"></i></div>
     </div>
     <div class="content-img">
       <!-- <img src="" alt=""> -->
@@ -18,14 +18,20 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     data () {
       return {
-        contentExpand: false
       }
     },
+    computed: {
+      ...mapGetters(['expandMContent'])
+    },
     methods: {
-      
+      hideMContent() {
+        this.$store.dispatch("toggleMContent", false);
+      }
     }
   }
 </script>

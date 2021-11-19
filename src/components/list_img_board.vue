@@ -7,7 +7,7 @@
         <i class="fas fa-sort-amount-down"></i>排序
       </div>
     </div>
-    <div v-if="true" class="scroll-row-container" >
+    <div class="scroll-row-container" >
       <ImgCard/>
       <ImgCard/>
       <ImgCard/>

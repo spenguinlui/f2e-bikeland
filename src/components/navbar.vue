@@ -5,9 +5,9 @@
         <img src="../assets/images/brand-light.png" alt="logo-icon">
       </div>
       <div class="nav-block">
-        <div class="btn-outline btn-text-icon" @click="checkOutFindBictle"><i class="fas fa-bicycle"></i>找單車</div>
-        <div class="btn-outline btn-text-icon" @click="checkOutFindRoute"><i class="fas fa-route"></i>找路線</div>
-        <div class="btn-outline btn-text-icon" @click="checkOutFindScenicspot"><i class="fas fa-umbrella"></i>找景點</div>
+        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'bike' }" @click="checkoutTargetType('bike')"><i class="fas fa-bicycle"></i>找單車</div>
+        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'route' }" @click="checkoutTargetType('route')"><i class="fas fa-route"></i>找路線</div>
+        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'scenicspot' }" @click="checkoutTargetType('scenicspot')"><i class="fas fa-umbrella"></i>找景點</div>
       </div>
       <div class="nav-m-trigger" @click="() => { mobileNavbarShow = !mobileNavbarShow }">
         <i class="fas fa-bars"></i>
@@ -15,9 +15,9 @@
     </nav>
     <div class="nav-m-menu" v-show="mobileNavbarShow">
       <div class="nav-m-content">
-        <div class="nav-m-block" @click="checkOutFindBictle"><div class="btn-text-icon"><i class="fas fa-bicycle"></i>找單車</div></div>
-        <div class="nav-m-block" @click="checkOutFindRoute"><div class="btn-text-icon"><i class="fas fa-route"></i>找路線</div></div>
-        <div class="nav-m-block" @click="checkOutFindScenicspot"><div class="btn-text-icon"><i class="fas fa-umbrella"></i>找景點</div></div>
+        <div class="nav-m-block" @click="checkoutTargetType('bike')"><div class="btn-text-icon" :class="{ active: targetType === 'bike' }"><i class="fas fa-bicycle"></i>找單車</div></div>
+        <div class="nav-m-block" @click="checkoutTargetType('route')"><div class="btn-text-icon"><i class="fas fa-route" :class="{ active: targetType === 'route' }"></i>找路線</div></div>
+        <div class="nav-m-block" @click="checkoutTargetType('scenicspot')"><div class="btn-text-icon" :class="{ active: targetType === 'scenicspot' }"><i class="fas fa-umbrella"></i>找景點</div></div>
       </div>
       <div class="nav-m-connect btn-text-icon"><i class="fas fa-phone-alt"></i>聯絡單車客服</div>
     </div>
@@ -25,25 +25,21 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
-    props: ['changeFindType'],
     data () {
       return {
         mobileNavbarShow: false
       }
     },
+    computed: {
+      ...mapGetters(['targetType'])
+    },
     methods: {
-      checkOutFindBictle() {
-        // console.log("找單車")
-        this.changeFindType("list-board");
-      },
-      checkOutFindRoute() {
-        // console.log("找路線")
-        this.changeFindType("list-board");
-      },
-      checkOutFindScenicspot() {
-        console.log("找景點")
-        this.changeFindType("list-img-board");
+      checkoutTargetType(type) {
+        this.$store.dispatch("checkoutTargetType", type);
+        this.$store.dispatch("getDataList");
       }
     }
   }

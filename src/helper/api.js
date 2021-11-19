@@ -15,7 +15,7 @@ const GetAuthorizationHeader = () => {
   return { 'Authorization': Authorization, 'X-Date': GMTString };
 }
 
-const axiousObjsct = ({ dataType, query }) => {
+const axiousObjsct = (dataType, query) => {
   switch (dataType) {
     case "Bike/Station/NearBy":
       console.log("1")
@@ -47,4 +47,4 @@ const axiousObjsct = ({ dataType, query }) => {
   })
 }
 
-export default axiousObjsct();
+export default axiousObjsct;

@@ -1,28 +1,44 @@
 <template>
   <div class="search-type-bar-container">
+    <template v-if="targetType === 'bike' || targetType === 'scenicspot'">
     <div class="search-type-bar">
       <div class="ra-block">
-        <div class="bg-move" :class="{ 'on-left': leftBtnOn, 'on-right': !leftBtnOn }"></div>
-        <div @click="toggleDataType('找單車')" class="btn-left" :class="{ active: leftBtnOn, off: !leftBtnOn }"><i class="fas fa-bicycle"></i>找單車</div>
-        <div @click="toggleDataType('找車位')" class="btn-right" :class="{ active: !leftBtnOn, off: leftBtnOn }"><i class="fas fa-parking"></i>找車位</div>
+        <div class="bg-move"
+          :class="{ 
+            'on-left': targetType === 'bike' ? sortList[0].on : sortList[2].on,
+            'on-right': targetType === 'bike' ? sortList[1].on : sortList[3].on }
+        "></div>
+        <template v-if="targetType === 'bike'">
+          <div @click="toggleDataType(0)" class="btn-left" :class="{ active: sortList[0].on, off: !sortList[0].on }"><i class="fas fa-bicycle"></i>找單車</div>
+          <div @click="toggleDataType(1)" class="btn-right" :class="{ active: sortList[1].on, off: !sortList[1].on }"><i class="fas fa-parking"></i>找車位</div>
+        </template>
+        <template v-if="targetType === 'scenicspot'">
+          <div @click="toggleDataType(2)" class="btn-left" :class="{ active: sortList[2].on, off: !sortList[2].on }"><i class="fas fa-bicycle"></i>找景點</div>
+          <div @click="toggleDataType(3)" class="btn-right" :class="{ active: sortList[3].on, off: !sortList[3].on }"><i class="fas fa-parking"></i>找餐廳</div>
+        </template>
       </div>
     </div>
+    </template>
     <div @click="locateCurrent" class="locate-icon"><i class="fas fa-crosshairs"></i></div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     data () {
       return {
         leftBtnOn: true
       }
     },
+    computed: {
+      ...mapGetters(['targetType', 'sortList'])
+    },
     methods: {
-      toggleDataType(target) {
-        this.leftBtnOn = !this.leftBtnOn;
-        console.log(target)
-        // ..
+      toggleDataType(targetIndex) {
+        this.$store.dispatch("changeSortList", targetIndex);
+        this.$store.dispatch("getDataList");
       },
       locateCurrent() {
         console.log("定位")

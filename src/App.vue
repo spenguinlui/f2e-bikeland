@@ -1,20 +1,22 @@
 <template>
   <div id="app">
-    <Navbar :changeFindType="changeFindType"/>
+    <Navbar/>
     <SearchTypeBar/>
-    <template v-if="false">
+    <template v-if="targetType === 'bike' || targetType === 'route'">
       <ListBoard/>
     </template>
-    <template v-if="true">
+    <template v-if="targetType === 'scenicspot'">
       <ListImgBoard/>
+      <Content/>
+      <MContent/> 
     </template>
     <Map/>
-    <Content/>
-    <MContent/> 
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import Navbar from "./components/navbar.vue";
 import SearchTypeBar from "./components/search_type_bar.vue";
 import ListBoard from "./components/list_board.vue";
@@ -30,13 +32,26 @@ export default {
       findType: 'list-board'
     }
   },
+  computed: {
+    ...mapGetters(['targetType'])
+  },
   methods: {
-    getData() {
-      console.log("準備要資料")
+    getCurrentPosition() {
+      if ("geolocation" in navigator) {
+        console.log("可使用定位")
+        navigator.geolocation.getCurrentPosition((position) => {
+          const currentPosition = {latitude: position.coords.latitude, longitude: position.coords.longitude};
+          this.getData(currentPosition);
+        }, (error) => {
+          console.log("定位失敗", error);  // 做失敗處置
+        })
+      } else {
+        console.log("無法使用定位") // 做失敗處置
+      }
     },
-    changeFindType(targetFindType) {
-      this.findType = targetFindType;
-      console.log(this.findType)
+    getData(position) {
+      this.$store.dispatch("setCurrentPosition", position);
+      this.$store.dispatch("getDataList");
     }
   },
   components: {
@@ -50,7 +65,7 @@ export default {
   },
   created() {
     // 創立元件要資料
-    // this.getData();
+    this.getCurrentPosition();
   }
 }
 
@@ -64,10 +79,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  width: 300px;
-  height: 300px;
 }
 </style>
 

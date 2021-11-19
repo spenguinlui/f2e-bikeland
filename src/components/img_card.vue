@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card-container" @click="() => { contentShow = !contentShow }">
+    <div class="card-container" @click="showMContent">
       <div class="card-img">
         <!-- <img src="" alt=""> -->
         <div class="brand"><img src="../assets/images/brand-dark.png" alt="找不到圖片"></div>
@@ -29,7 +29,9 @@
       }
     },
     methods: {
-      
+      showMContent() {
+        this.$store.dispatch("toggleMContent", true);
+      }
     }
   }
 </script>

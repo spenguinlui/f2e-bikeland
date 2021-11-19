@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <l-map ref="myMap" :zoom="zoom" :center="center" :options="options" style="width: 100vw; height: 100vh;">
+    <l-map ref="myMap" :zoom="zoom" :center="center" :options="options" class="map">
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
       <l-marker ref="location" :lat-lng="center">
           <l-icon>
@@ -12,7 +12,7 @@
           你的位置
         </l-popup>
       </l-marker>
-    </l-map> -->
+    </l-map>
   </div>
 </template>
 
@@ -63,4 +63,10 @@
 
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
+
+  .map {
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+  }
 </style>

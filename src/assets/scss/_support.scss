@@ -152,6 +152,9 @@
     &:focus {
       border: 3px solid $primary-300;
     }
+    &.active {
+      border: 3px solid $primary-300;
+    }
   }
   @if $color == accent {
     border: 1px solid $accent-300;
@@ -161,6 +164,9 @@
       background-color: $accent-100;
     }
     &:focus {
+      border: 3px solid $accent-300;
+    }
+    &.active {
       border: 3px solid $accent-300;
     }
   }
@@ -174,6 +180,9 @@
     &:focus {
       border: 3px solid $alert-300;
     }
+    &.active {
+      border: 3px solid $alert-300;
+    }
   }
   @if $color == grey {
     border: 1px solid $grey-300;
@@ -183,6 +192,9 @@
       background-color: $grey-100;
     }
     &:focus {
+      border: 3px solid $grey-300;
+    }
+    &.active {
       border: 3px solid $grey-300;
     }
   }
