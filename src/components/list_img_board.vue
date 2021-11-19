@@ -1,5 +1,6 @@
 <template>
   <div class="list-container">
+    <div @click="locateCurrent" class="locate-icon"><i class="fas fa-crosshairs"></i></div>
     <div class="tool-bar">
       <SearchBar/>
       <div class="btn-filter">
@@ -30,7 +31,9 @@
       ImgCard
     },
     methods: {
-      
+      locateCurrent() {
+        console.log("定位")
+      }
     }
   }
 </script>
@@ -51,12 +54,12 @@
     }
     @include mobile {
       width: 100%;
-      height: 233px;
+      height: $list-img-board-m-height;
       bottom: 0;
       padding-bottom: 0;
     }
     background-color: $grey-100;
-    box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
+    box-shadow: $card-show;
     border-radius: 8px;
     padding: 28px 32px;
     z-index: 5;
@@ -76,6 +79,19 @@
         @include flex-row-start-center;
         height: auto;
         gap: 10px;
+      }
+    }
+    .locate-icon {
+      @include locate-btn;
+      @include btn(18);
+      width: calc(#{$search-type-btn-m-height} + (#{$search-type-btn-m-padding-y} * 2));
+      height: calc(#{$search-type-btn-m-height} + (#{$search-type-btn-m-padding-y} * 2));
+      font-size: calc((#{$search-type-btn-m-height} + (#{$search-type-btn-m-padding-y} * 2)) / 2);
+      position: absolute;
+      right: 28px;
+      top: -48px; // 高 + 12px
+      @include pad-up {
+        display: none;
       }
     }
   }

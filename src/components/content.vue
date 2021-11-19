@@ -48,7 +48,7 @@
     width: 100%;
     height: $content-height;
     background-color: $grey-100;
-    box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
+    box-shadow: $card-show;
     border-radius: 8px;
     padding: 28px 36px;
     .expand-btn {
@@ -59,6 +59,7 @@
       margin-left: $list-board-width + 64px - 36px;
       flex-grow: 1;
       height: 100%;
+      overflow: hidden;
       .content-title {
         @include font-h3(1);
         color: $primary-500;
@@ -86,6 +87,7 @@
     }
     .content-img {
       @include card-img;
+      min-width: 150px;
       margin-left: 20px;
       .brand {
         > img {

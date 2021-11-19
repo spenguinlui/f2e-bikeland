@@ -27,6 +27,9 @@ $grey-400: #9A9A9A;
 $grey-500: #767676;
 $grey-600: #464646;
 
+// 陰影
+$card-show: 4px 4px 20px rgba(118, 118, 118, 0.3);
+
 // 各字型大小
 $font-size-h1: 2.488rem; // 45px
 $font-size-h2: 2.074rem; // 37px
@@ -41,6 +44,19 @@ $font-size-caption: 0.694rem; // 12px
 $nav-bar-m-height: 35px;
 $nav-bar-height: 70px;
 $list-board-width: 425px;
+$list-board-m-height: 174px;
+$list-img-board-m-height: 233px;
 $card-img-height: 155px;
 $card-img-m-height: 80px;
 $content-height: 308px;
+
+$search-type-btn-width: 124px;
+$search-type-btn-height: 44px;
+$search-type-btn-padding-x: 12px;
+$search-type-btn-padding-y: 8px;
+
+$search-type-btn-m-width: 92px;
+$search-type-btn-m-height: 28px;
+$search-type-btn-m-padding-x: 6px;
+$search-type-btn-m-padding-y: 4px;
+

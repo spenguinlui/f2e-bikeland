@@ -26,6 +26,7 @@
 
 <script>
   export default {
+    props: ['changeFindType'],
     data () {
       return {
         mobileNavbarShow: false
@@ -33,13 +34,16 @@
     },
     methods: {
       checkOutFindBictle() {
-        console.log("找單車")
+        // console.log("找單車")
+        this.changeFindType("list-board");
       },
       checkOutFindRoute() {
-        console.log("找路線")
+        // console.log("找路線")
+        this.changeFindType("list-board");
       },
       checkOutFindScenicspot() {
         console.log("找景點")
+        this.changeFindType("list-img-board");
       }
     }
   }

@@ -14,8 +14,8 @@ svg[class*="fa-"] {
 
 @mixin card-container {
   @include flex-column-center-center;
-  padding: 20px 0;
   border-bottom: 1px solid $grey-300;
+  padding: 20px 0;
 }
 
 @mixin card-title {
@@ -77,5 +77,25 @@ svg[class*="fa-"] {
     @include mobile {
       display: none;
     }
+  }
+}
+
+@mixin locate-btn {
+  @include flex-row-center-center;
+  box-shadow: $card-show;
+  color: $grey-100;
+  background-color: $primary-400;
+  > svg {
+    margin: 0;
+  }
+  &:hover {
+    background-color: $primary-500;
+  }
+  &:disabled {
+    color: $grey-100;
+    background-color: $grey-300;
+  }
+  &:focus {
+    background-color: $primary-500;
   }
 }

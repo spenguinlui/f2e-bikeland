@@ -4,6 +4,7 @@
       <div v-show="containerExpand"><i class="fas fa-angle-double-down"></i></div>
       <div v-show="!containerExpand"><i class="fas fa-angle-double-up"></i></div>
     </div>
+    <div @click="locateCurrent" class="locate-icon"><i class="fas fa-crosshairs"></i></div>
     <div class="tool-bar">
       <SearchBar/>
       <div class="btn-filter">
@@ -11,18 +12,18 @@
       </div>
     </div>
     <div class="scroll-container">
-      <template v-if="false">
+      <div class="card-outsid-container" v-if="true">
         <BikeSpotCard/>
         <BikeSpotCard/>
         <BikeSpotCard/>
         <BikeSpotCard/>
-      </template>
-      <template v-if="true">
+      </div>
+      <div class="card-outsid-container" v-if="false">
         <RouteCard/>
         <RouteCard/>
         <RouteCard/>
         <RouteCard/>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -45,6 +46,9 @@
     },
     methods: {
       expandContent() {
+      },
+      locateCurrent() {
+        console.log("定位")
       }
     }
   }
@@ -66,7 +70,7 @@
     }
     @include mobile {
       width: 100%;
-      height: 174px;
+      height: $list-board-m-height;
       bottom: 0;
       padding-bottom: 0;
       &.expanding {
@@ -74,7 +78,7 @@
       }
     }
     background-color: $grey-100;
-    box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
+    box-shadow: $card-show;
     border-radius: 8px;
     padding: 28px 32px;
     z-index: 5;
@@ -94,6 +98,22 @@
     .scroll-container {
       overflow: auto;
       height: 87%;
+      .card-outsid-container {
+        margin-top: -20px;
+      }
+    }
+    .locate-icon {
+      @include locate-btn;
+      @include btn(18);
+      width: calc(#{$search-type-btn-m-height} + (#{$search-type-btn-m-padding-y} * 2));
+      height: calc(#{$search-type-btn-m-height} + (#{$search-type-btn-m-padding-y} * 2));
+      font-size: calc((#{$search-type-btn-m-height} + (#{$search-type-btn-m-padding-y} * 2)) / 2);
+      position: absolute;
+      right: 28px;
+      top: -48px; // 高 + 12px
+      @include pad-up {
+        display: none;
+      }
     }
   }
 </style>

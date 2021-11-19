@@ -44,7 +44,7 @@
     bottom: 0;
     padding-bottom: 0;
     background-color: $grey-100;
-    box-shadow: 4px 4px 20px rgba(118, 118, 118, 0.3);
+    box-shadow: $card-show;
     border-radius: 8px;
     padding: 28px 32px;
     z-index: 5;
