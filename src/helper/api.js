@@ -27,7 +27,6 @@ const urlQueryStr = (dataType, query = null) => {
 
   // ..其他的參數在這處理
   const url = encodeURI(`https://ptx.transportdata.tw/MOTC/v2/${dataType}?$format=JSON${queryStr}`);
-  console.log(url)
   return url
 }
 

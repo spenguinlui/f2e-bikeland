@@ -38,7 +38,7 @@ export default {
   methods: {
     getCurrentPosition() {
       if ("geolocation" in navigator) {
-        console.log("可使用定位")
+        // console.log("可使用定位")
         navigator.geolocation.getCurrentPosition((position) => {
           const currentPosition = {latitude: position.coords.latitude, longitude: position.coords.longitude};
           this.$store.dispatch("setCurrentPosition", currentPosition);
@@ -54,6 +54,7 @@ export default {
     },
     getData() {
       this.$store.dispatch("getBikeDataList");
+      console.log("要資料囉")
     }
   },
   components: {
@@ -67,8 +68,13 @@ export default {
   },
   created() {
     // 創立元件要資料
-    // this.getData();
+    this.getData();
+
+    // 取得座標
     this.getCurrentPosition();
+    window.setInterval(() => {
+      this.getData();
+    }, 15000)
   }
 }
 

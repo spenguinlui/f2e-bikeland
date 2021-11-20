@@ -56,6 +56,7 @@ export const storeObject = {
       latitude: "25.046951",
       longitude: "121.516887", // 預設台北車站
     },
+    isLoading: false,
     expandMContent: false,
     mContentData: {},
     bikeDataList: [],
@@ -72,7 +73,8 @@ export const storeObject = {
     bikeDataList: state => state.bikeDataList,
     routeDataList: state => state.routeDataList,
     spotDataList: state => state.spotDataList,
-    restaurantDataList: state => state.restaurantDataList
+    restaurantDataList: state => state.restaurantDataList,
+    isLoading: state => state.isLoading
   },
   mutations: {
     // 切換搜尋類型 找單車/找路線/找景點
@@ -136,6 +138,10 @@ export const storeObject = {
       } else {
         state.mContentData = this.state.restaurantDataList[index];
       }
+    },
+    // 有空在做
+    DATA_LOADING(state, isLoading) {
+      state.isLoading = isLoading;
     }
   },
   actions: {
@@ -166,11 +172,13 @@ export const storeObject = {
     setCurrentPosition({ commit }, position) {
       if (position) commit("SET_POSITION", position)
     },
+    // 切換 mobile 景點內容顯示
     toggleMContent({ commit }, toggle) {
       commit("TOGGLE_M_CONTENT_SHOW", toggle);
     },
     // 取得自行車資料列表
     getBikeDataList({ commit }) {
+      commit("DATA_LOADING", true);
       const stationQuery = { position: this.state.position, select: ['StationUID', 'AuthorityID','StationName', 'StationPosition'] }
       const availabilityQuery = { position: this.state.position, select: ['StationUID', 'AvailableRentBikes', 'AvailableReturnBikes'] }
       const header = api.authorizationHeader();
@@ -182,44 +190,40 @@ export const storeObject = {
         headers: header
       })
       .then((res) => {
-        if (res.status) {
-          dataList =  res.data; // 保存第一次站點資料
-          commit("GET_CURRNET_CITY", dataList[0].AuthorityID);
-          axios({
-            method: 'get',
-            url: api.urlQueryStr("Bike/Availability/NearBy", availabilityQuery),
-            headers: header
+        dataList =  res.data; // 保存第一次站點資料
+        commit("GET_CURRNET_CITY", dataList[0].AuthorityID);
+        axios({
+          method: 'get',
+          url: api.urlQueryStr("Bike/Availability/NearBy", availabilityQuery),
+          headers: header
+        })
+        .then((res) => {
+          let avaDataList = res.data;
+          avaDataList = avaDataList.map((data) => {
+            let findData = dataList.find((d) => d.StationUID === data.StationUID);
+            if (findData) data = {...data, ...findData}
+            data.StationName.Zh_tw = data.StationName.Zh_tw.replace("YouBike1.0_", "1.0");
+            data.StationName.Zh_tw = data.StationName.Zh_tw.replace("YouBike2.0_", "2.0");
+            data.Distance = distance(data.StationPosition.PositionLat, data.StationPosition.PositionLon, this.state.position.latitude, this.state.position.longitude);
+            data.DistanceZH = distanceZh(data.Distance);
+            return data;
           })
-          .then((res) => {
-            if (res.status) {
-              let avaDataList = res.data;
-              avaDataList = avaDataList.map((data) => {
-                let findData = dataList.find((d) => d.StationUID === data.StationUID);
-                if (findData) data = {...data, ...findData}
-                data.StationName.Zh_tw = data.StationName.Zh_tw.replace("YouBike1.0_", "1.0");
-                data.StationName.Zh_tw = data.StationName.Zh_tw.replace("YouBike2.0_", "2.0");
-                data.Distance = distance(data.StationPosition.PositionLat, data.StationPosition.PositionLon, this.state.position.latitude, this.state.position.longitude);
-                data.DistanceZH = distanceZh(data.Distance);
-                return data;
-              })
-              commit("UPDATE_BIKE_DATA_LIST", avaDataList);
-            } else {
-              // 錯誤處理
-            }
-          }).catch(() => {
-            // 錯誤處理
-          })
-        } else {
+          commit("UPDATE_BIKE_DATA_LIST", avaDataList);
+          commit("DATA_LOADING", false);
+        }).catch(() => {
           // 錯誤處理
-        }
+          commit("DATA_LOADING", false);
+        })
       }).catch(() => {
         // 錯誤處理
+        commit("DATA_LOADING", false);
       })
     },
 
     // 取得自行車路線資料
     getRouteDataList({ commit }){
       const header = api.authorizationHeader();
+      if (this.state.currentCity) { return } // 沒有可選定縣市就不用繼續查了
       axios({
         method: 'get',
         url: api.urlQueryStr(`Cycling/Shape/${this.state.currentCity}`, { top: 30 }),
@@ -230,6 +234,7 @@ export const storeObject = {
         // 錯誤處理
       })
     },
+
     // 取得景點資料
     getSpotDataList({ commit }) {
       const header = api.authorizationHeader();

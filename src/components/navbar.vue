@@ -39,7 +39,7 @@
     methods: {
       checkoutBikeMap() {
         this.$store.dispatch("checkoutTargetType", "bike");
-        this.$store.dispatch("getDataList");
+        this.$store.dispatch("getBikeDataList");
       },
       checkoutRouteMap() {
         this.$store.dispatch("checkoutTargetType", "route");

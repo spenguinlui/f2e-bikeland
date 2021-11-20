@@ -48,7 +48,7 @@
       }
     },
     computed: {
-      ...mapGetters(['targetType', 'bikeDataList', 'routeDataList'])
+      ...mapGetters(['targetType', 'bikeDataList', 'routeDataList', 'isLoading'])
     },
     components: {
       SearchBar,
