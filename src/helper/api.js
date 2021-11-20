@@ -1,7 +1,6 @@
-import axios from 'axios';
 import jsSHA from "jssha";
 
-const GetAuthorizationHeader = () => {
+const authorizationHeader = () => {
   const APP_ID = process.env.VUE_APP_APP_ID;
   const APP_KEY = process.env.VUE_APP_APP_KEY;
 
@@ -15,36 +14,21 @@ const GetAuthorizationHeader = () => {
   return { 'Authorization': Authorization, 'X-Date': GMTString };
 }
 
-const axiousObjsct = (dataType, query) => {
-  switch (dataType) {
-    case "Bike/Station/NearBy":
-      console.log("1")
-      break;
-    case "Bike/Availability/NearBy":
-      console.log("2")
-      break;
-    case "Tourism/ScenicSpot":
-      console.log("2")
-      break;
-    case "Tourism/Restaurant":
-      console.log("2")
-      break;
-    default:
-      console.log("錯誤的資料請求")
-      break;
+const urlQueryStr = (dataType, query = null) => {
+  let queryStr = "";
+  if (query.position) {
+    queryStr += `&$spatialFilter=nearby(${query.position.latitude},${query.position.longitude},1000)`;
+    // if (query.select) {
+    //   queryStr += '&$select=';
+    //   query.select.map((s) => queryStr += `${s},`);
+    // }
   }
-  const queryStr = query; // 待處理
-  const url = `https://ptx.transportdata.tw/MOTC/v2/${dataType}?${queryStr}&$format=JSON`
-  axios({
-    method: 'get',
-    url: url,
-    headers: GetAuthorizationHeader()
-  })
-  .then((response) => {
-    console.log(response);
-  }).catch((error) => {
-    console.log(error)
-  })
+  if (query.top) queryStr += `&$top=${query.top}`;
+
+  // ..其他的參數在這處理
+  const url = encodeURI(`https://ptx.transportdata.tw/MOTC/v2/${dataType}?$format=JSON${queryStr}`);
+  console.log(url)
+  return url
 }
 
-export default axiousObjsct;
+export default { authorizationHeader, urlQueryStr };

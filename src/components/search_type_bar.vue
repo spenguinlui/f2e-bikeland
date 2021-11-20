@@ -38,7 +38,7 @@
     methods: {
       toggleDataType(targetIndex) {
         this.$store.dispatch("changeSortList", targetIndex);
-        this.$store.dispatch("getDataList");
+        if (targetIndex === 2 || targetIndex === 3) { this.$store.dispatch("getSpotDataList") }
       },
       locateCurrent() {
         console.log("定位")

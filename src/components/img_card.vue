@@ -2,20 +2,26 @@
   <div>
     <div class="card-container" @click="showMContent">
       <div class="card-img">
-        <!-- <img src="" alt=""> -->
-        <div class="brand"><img src="../assets/images/brand-dark.png" alt="找不到圖片"></div>
+        <template v-if="data.Picture && Object.keys(data.Picture).length !== 0">
+          <img :src="data.Picture.PictureUrl1" :alt="data.Picture.PictureDescription1">
+        </template>
+        <template v-else>
+          <div class="brand"><img src="../assets/images/brand-dark.png" alt="找不到圖片"></div>
+        </template>
       </div>
       <div class="card-title">
-        <div class="card-title-text"><span>國立中正紀念堂國立中正紀念堂國立中正紀念堂國立中正紀念堂</span></div>
-        <div class="card-title-msg"><i class="fas fa-map-marker-alt"></i>台北市</div>
+        <div class="card-title-text"><span>{{ data.Name }}</span></div>
+        <div class="card-title-msg"><i class="fas fa-map-marker-alt"></i>{{ data.City }}</div>
       </div>
       <div class="card-footer">
         <div class="card-tag-container">
-          <div class="card-tag">都會公園類</div>
-          <div class="card-tag">自然類</div>
+          <div class="card-tag" v-if="data.Class1">{{ data.Class1 }}</div>
+          <div class="card-tag" v-if="data.Class2">{{ data.Class2 }}</div>
+          <div class="card-tag m-hide" v-if="data.Class3">{{ data.Class3 }}</div>
           <!-- mobile 第三張卡要隱藏 -->
+          <div class="card-tag" v-if="!data.Class1">其他</div>
         </div>
-        <div class="card-web-btn"><i class="fas fa-globe-americas"></i></div>
+        <a :href="data.WebsiteUrl" target="_blank" class="card-web-btn"><i class="fas fa-globe-americas"></i></a>
       </div>
     </div>
   </div>
@@ -23,6 +29,7 @@
 
 <script>
   export default {
+    props: ['data', 'index'],
     data () {
       return {
         contentShow: false
@@ -31,6 +38,7 @@
     methods: {
       showMContent() {
         this.$store.dispatch("toggleMContent", true);
+        this.$store.commit("CHECKOUT_M_CONTENT", this.index);
       }
     }
   }
@@ -85,6 +93,11 @@
           }
           &:focus {
             border: 2px solid $primary-300;
+          }
+          &.m-hide {
+            @include mobile {
+              display: none;
+            }
           }
         }
       }

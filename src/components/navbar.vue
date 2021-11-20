@@ -5,9 +5,9 @@
         <img src="../assets/images/brand-light.png" alt="logo-icon">
       </div>
       <div class="nav-block">
-        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'bike' }" @click="checkoutTargetType('bike')"><i class="fas fa-bicycle"></i>找單車</div>
-        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'route' }" @click="checkoutTargetType('route')"><i class="fas fa-route"></i>找路線</div>
-        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'scenicspot' }" @click="checkoutTargetType('scenicspot')"><i class="fas fa-umbrella"></i>找景點</div>
+        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'bike' }" @click="checkoutBikeMap"><i class="fas fa-bicycle"></i>找單車</div>
+        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'route' }" @click="checkoutRouteMap"><i class="fas fa-route"></i>找路線</div>
+        <div class="btn-outline btn-text-icon" :class="{ active: targetType === 'scenicspot' }" @click="checkoutSpotMap"><i class="fas fa-umbrella"></i>找景點</div>
       </div>
       <div class="nav-m-trigger" @click="() => { mobileNavbarShow = !mobileNavbarShow }">
         <i class="fas fa-bars"></i>
@@ -15,9 +15,9 @@
     </nav>
     <div class="nav-m-menu" v-show="mobileNavbarShow">
       <div class="nav-m-content">
-        <div class="nav-m-block" @click="checkoutTargetType('bike')"><div class="btn-text-icon" :class="{ active: targetType === 'bike' }"><i class="fas fa-bicycle"></i>找單車</div></div>
-        <div class="nav-m-block" @click="checkoutTargetType('route')"><div class="btn-text-icon"><i class="fas fa-route" :class="{ active: targetType === 'route' }"></i>找路線</div></div>
-        <div class="nav-m-block" @click="checkoutTargetType('scenicspot')"><div class="btn-text-icon" :class="{ active: targetType === 'scenicspot' }"><i class="fas fa-umbrella"></i>找景點</div></div>
+        <div class="nav-m-block" @click="checkoutBikeMap"><div class="btn-text-icon" :class="{ active: targetType === 'bike' }"><i class="fas fa-bicycle"></i>找單車</div></div>
+        <div class="nav-m-block" @click="checkoutRouteMap"><div class="btn-text-icon"><i class="fas fa-route" :class="{ active: targetType === 'route' }"></i>找路線</div></div>
+        <div class="nav-m-block" @click="checkoutSpotMap"><div class="btn-text-icon" :class="{ active: targetType === 'scenicspot' }"><i class="fas fa-umbrella"></i>找景點</div></div>
       </div>
       <div class="nav-m-connect btn-text-icon"><i class="fas fa-phone-alt"></i>聯絡單車客服</div>
     </div>
@@ -37,9 +37,17 @@
       ...mapGetters(['targetType'])
     },
     methods: {
-      checkoutTargetType(type) {
-        this.$store.dispatch("checkoutTargetType", type);
+      checkoutBikeMap() {
+        this.$store.dispatch("checkoutTargetType", "bike");
         this.$store.dispatch("getDataList");
+      },
+      checkoutRouteMap() {
+        this.$store.dispatch("checkoutTargetType", "route");
+        this.$store.dispatch("getRouteDataList");
+      },
+      checkoutSpotMap() {
+        this.$store.dispatch("checkoutTargetType", "scenicspot");
+        this.$store.dispatch("getSpotDataList");
       }
     }
   }

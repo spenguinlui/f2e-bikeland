@@ -8,15 +8,23 @@
       </div>
     </div>
     <div class="scroll-row-container" >
-      <ImgCard/>
-      <ImgCard/>
-      <ImgCard/>
-      <ImgCard/>
+      <template v-if="sortList[2].on">
+        <template v-for="(spotData, index) in spotDataList">
+          <ImgCard :key="spotData.ID" :index="index" :data="spotData"/>
+        </template>
+      </template>
+      <template v-if="sortList[3].on">
+        <template v-for="(restaurantData, index) in restaurantDataList">
+          <ImgCard :key="restaurantData.ID" :index="index" :data="restaurantData"/>
+        </template>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   import SearchBar from "./search_bar.vue";
   import ImgCard from "./img_card.vue";
 
@@ -25,6 +33,9 @@
       return {
         
       }
+    },
+    computed: {
+      ...mapGetters(['sortList', 'spotDataList', 'restaurantDataList'])
     },
     components: {
       SearchBar,

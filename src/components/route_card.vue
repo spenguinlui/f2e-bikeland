@@ -2,36 +2,40 @@
   <div>
     <div class="card-container">
       <div class="card-title">
-        <div class="card-title-text"><span>中正路(南側)中正路(南側)中正路(南側)中正路(南側)</span></div>
-        <div class="card-title-msg"><i class="fas fa-map-marker-alt"></i>台北市</div>
+        <div class="card-title-text"><span>{{ data.RouteName }}</span></div>
+        <div class="card-title-msg"><i class="fas fa-map-marker-alt"></i>{{ data.City }}</div>
       </div>
       <div class="card-content-column">
         <div class="route-line"><img src="../assets/images/route-line.svg" alt="線條"></div>
         <div class="route-container">
           <div class="route-content">
             <div class="column-header">起</div>
-            <div class="route-name"><span>承德路5段</span></div>
+            <div class="route-name"><span>{{ data.RoadSectionStart || '無資料' }}</span></div>
           </div>
           <div class="route-content">
             <div class="column-header">迄</div>
-            <div class="route-name"><span>民生東路民生東路民生東路民生東路民生東路</span></div>
+            <div class="route-name"><span>{{ data.RoadSectionEnd || '無資料' }}</span></div>
           </div>
         </div>
       </div>
-      <div class="card-footer"><i class="fas fa-route"></i>總長3.4公里</div>
+      <div class="card-footer"><i class="fas fa-route"></i>總長{{ distanceZh(data.CyclingLength) }}</div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    props: ['data'],
     data () {
       return {
         
       }
     },
     methods: {
-      
+      distanceZh(dist) {
+        const distStr = dist >= 1000 ? `${dist / 1000}公里` : `${dist}公尺`
+        return distStr;
+      }
     }
   }
 </script>

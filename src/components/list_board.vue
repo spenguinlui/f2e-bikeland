@@ -7,22 +7,27 @@
     <div @click="locateCurrent" class="locate-icon"><i class="fas fa-crosshairs"></i></div>
     <div class="tool-bar">
       <SearchBar/>
-      <div class="btn-filter">
-        <i class="fas fa-sort-amount-down"></i>排序
+      <div class="btn-filter" @click="sortBlock = !sortBlock">
+        <div>
+          <i class="fas fa-sort-amount-down"></i>排序
+        </div>
+        <div class="filter-select-block" v-show="sortBlock">
+          <div class="filter-select" @click.prevent.stop="sortByDistace">距離較近</div>
+          <div class="filter-select" @click.prevent.stop="sortByRent">可借車數</div>
+          <div class="filter-select" @click.prevent.stop="sortByReturn">可還車數</div>
+        </div>
       </div>
     </div>
     <div class="scroll-container">
       <div class="card-outsid-container" v-if="targetType === 'bike'">
-        <BikeSpotCard/>
-        <BikeSpotCard/>
-        <BikeSpotCard/>
-        <BikeSpotCard/>
+        <template v-for="bikedata in bikeDataList">
+          <BikeSpotCard :key="bikedata.StationUID" :data="bikedata"/>
+        </template>
       </div>
       <div class="card-outsid-container" v-if="targetType === 'route'">
-        <RouteCard/>
-        <RouteCard/>
-        <RouteCard/>
-        <RouteCard/>
+        <template v-for="routedata in routeDataList">
+          <RouteCard :key="routedata.RouteName" :data="routedata"/>
+        </template>
       </div>
     </div>
   </div>
@@ -38,11 +43,12 @@
   export default {
     data () {
       return {
-        containerExpand: false
+        containerExpand: false,
+        sortBlock: false
       }
     },
     computed: {
-      ...mapGetters(['targetType'])
+      ...mapGetters(['targetType', 'bikeDataList', 'routeDataList'])
     },
     components: {
       SearchBar,
@@ -54,6 +60,18 @@
       },
       locateCurrent() {
         console.log("定位")
+      },
+      sortByDistace() {
+        this.$store.commit("SORT_BY_DISTANCE");
+        this.sortBlock = false;
+      },
+      sortByRent() {
+        this.$store.commit("SORT_BY_RENT");
+        this.sortBlock = false;
+      },
+      sortByReturn() {
+        this.$store.commit("SORT_BY_RETURN");
+        this.sortBlock = false;
       }
     }
   }
@@ -97,6 +115,26 @@
         @include  btn-outline;
         padding: 10px 12px;
         min-width: 71px;
+        position: relative;
+        .filter-select-block {
+          @include flex-column-center-center;
+          position: absolute;
+          left: 0;
+          top: 40px;
+          padding: 11px;
+          border: 1px solid #A4B375;
+          box-shadow: $card-show;
+          border-radius: 8px;
+          background: $grey-100;
+          width: max-content;
+          cursor: pointer;
+          .filter-select {
+            padding: 8px 0;
+            &:nth-child(1), &:nth-child(2) {
+              border-bottom: 1px solid $grey-300;
+            }
+          }
+        }
       }
       margin-bottom: 20px;
     }

@@ -41,17 +41,19 @@ export default {
         console.log("可使用定位")
         navigator.geolocation.getCurrentPosition((position) => {
           const currentPosition = {latitude: position.coords.latitude, longitude: position.coords.longitude};
-          this.getData(currentPosition);
+          this.$store.dispatch("setCurrentPosition", currentPosition);
+          this.getData();
         }, (error) => {
+          this.getData();
           console.log("定位失敗", error);  // 做失敗處置
         })
       } else {
+        this.getData();
         console.log("無法使用定位") // 做失敗處置
       }
     },
-    getData(position) {
-      this.$store.dispatch("setCurrentPosition", position);
-      this.$store.dispatch("getDataList");
+    getData() {
+      this.$store.dispatch("getBikeDataList");
     }
   },
   components: {
@@ -65,6 +67,7 @@ export default {
   },
   created() {
     // 創立元件要資料
+    // this.getData();
     this.getCurrentPosition();
   }
 }
