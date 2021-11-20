@@ -19,7 +19,14 @@
       </div>
     </div>
     </template>
-    <div @click="locateCurrent" class="locate-icon"><i class="fas fa-crosshairs"></i></div>
+    <div
+      @click="locateCurrent"
+      @mouseover="tooltipsShow = true"
+      @mouseleave="tooltipsShow = false"
+      class="locate-icon">
+      <i class="fas fa-crosshairs"></i>
+      <div v-show="tooltipsShow" class="locate-tooltips"><img src="../assets/images/tooltips.svg" alt="定位說明icon"></div>
+    </div>
   </div>
 </template>
 
@@ -29,7 +36,8 @@
   export default {
     data () {
       return {
-        leftBtnOn: true
+        leftBtnOn: true,
+        tooltipsShow: false
       }
     },
     computed: {
@@ -116,6 +124,12 @@
       width: calc(#{$search-type-btn-height} + (#{$search-type-btn-padding-y} * 2));
       height: calc(#{$search-type-btn-height} + (#{$search-type-btn-padding-y} * 2));
       font-size: calc((#{$search-type-btn-height} + (#{$search-type-btn-padding-y} * 2)) / 2);
+      position: relative;
+      .locate-tooltips {
+        position: absolute;
+        left: 0;
+        top: 65px;
+      }
     }
   }
 

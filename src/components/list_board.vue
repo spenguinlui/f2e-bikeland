@@ -4,7 +4,9 @@
       <div v-show="containerExpand"><i class="fas fa-angle-double-down"></i></div>
       <div v-show="!containerExpand"><i class="fas fa-angle-double-up"></i></div>
     </div>
-    <div @click="locateCurrent" class="locate-icon"><i class="fas fa-crosshairs"></i></div>
+    <div @click="locateCurrent" class="locate-icon">
+      <i class="fas fa-crosshairs"></i>
+    </div>
     <div class="tool-bar">
       <SearchBar/>
       <div class="btn-filter" @click="sortBlock = !sortBlock">
@@ -154,6 +156,11 @@
       position: absolute;
       right: 28px;
       top: -48px; // 高 + 12px
+      .locate-tooltips {
+        position: absolute;
+        left: 0;
+        top: 40px;
+      }
       @include pad-up {
         display: none;
       }
