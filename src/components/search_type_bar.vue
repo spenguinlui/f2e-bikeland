@@ -13,8 +13,8 @@
           <div @click="toggleBikeDataForReturn" class="btn-right" :class="{ active: sortList[1].on, off: !sortList[1].on }"><i class="fas fa-parking"></i>找車位</div>
         </template>
         <template v-if="targetType === 'scenicspot'">
-          <div @click="toggleDataType(2)" class="btn-left" :class="{ active: sortList[2].on, off: !sortList[2].on }"><i class="fas fa-umbrella-beach"></i>找景點</div>
-          <div @click="toggleDataType(3)" class="btn-right" :class="{ active: sortList[3].on, off: !sortList[3].on }"><i class="fas fa-utensils"></i>找餐廳</div>
+          <div @click="toggleSpotData" class="btn-left" :class="{ active: sortList[2].on, off: !sortList[2].on }"><i class="fas fa-umbrella-beach"></i>找景點</div>
+          <div @click="toggleRestaurantData" class="btn-right" :class="{ active: sortList[3].on, off: !sortList[3].on }"><i class="fas fa-utensils"></i>找餐廳</div>
         </template>
       </div>
     </div>
@@ -41,7 +41,7 @@
       }
     },
     computed: {
-      ...mapGetters(['targetType', 'sortList', 'bikeDataList'])
+      ...mapGetters(['targetType', 'sortList', 'bikeDataList', 'spotDataList', 'restaurantDataList'])
     },
     methods: {
       toggleDataType(targetIndex) {
@@ -57,6 +57,14 @@
       toggleBikeDataForReturn() {
         this.$store.dispatch("changeSortList", 1);
         this.$store.dispatch("setBikeReTurnDataOnMap", this.bikeDataList);
+      },
+      toggleSpotData() {
+        this.$store.dispatch("changeSortList", 2);
+        this.$store.dispatch("setSpotDataOnMap", this.spotDataList);
+      },
+      toggleRestaurantData() {
+        this.$store.dispatch("changeSortList", 3);
+        this.$store.dispatch("setRestaurantDataOnMap", this.restaurantDataList);
       },
       locateCurrent() {
         console.log("定位")

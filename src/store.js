@@ -2,6 +2,8 @@ import axios from 'axios';
 import api from "./helper/api";
 import L from 'leaflet';
 
+import SpotIcon from "./assets/images/spot-maker.svg";
+
 const roundX = (val, precision) => Math.round(Math.round(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0));
 
 const distance = (lat1, lon1, lat2, lon2) => {
@@ -59,6 +61,13 @@ const createBikeMarker = (dataCount) => {
         </div>
       `
     })
+}
+
+const spotMarker = () => {
+  return L.icon({
+    iconUrl: SpotIcon,
+    iconSize: [62, 62],
+  })
 }
 
 const createBikePopupObj = (data) => {
@@ -232,6 +241,9 @@ export const storeObject = {
     },
     SET_BIKE_RETURN_LAYER(state, layer) {
       state.mapLayers.bikeReTurnLayer = layer;
+    },
+    SET_SPOT_LAYER(state, layer) {
+      state.mapLayers.spotLayer = layer;
     }
   },
   actions: {
@@ -317,6 +329,7 @@ export const storeObject = {
 
     // 將自行車租借資料打上地圖
     setBikeRentDataOnMap({ commit }, bikeDataList) {
+      removeOtherLayers(this.state, "bikeRentLayer");
       let bikeLayer = new L.LayerGroup().addTo(this.state.storeMap);
       bikeDataList.map((data) => {
         const divIcon = createBikeMarker(data.AvailableRentBikes);
@@ -325,12 +338,12 @@ export const storeObject = {
           .openPopup()
           .addTo(bikeLayer);
       })
-      removeOtherLayers(this.state, "bikeRentLayer");
       commit("SET_BIKE_RENT_LAYER", bikeLayer);
     },
 
     // 將自行車還車資料打上地圖
     setBikeReTurnDataOnMap({ commit }, bikeDataList) {
+      removeOtherLayers(this.state, "bikeReTurnLayer");
       let bikeLayer = new L.LayerGroup().addTo(this.state.storeMap);
       bikeDataList.map((data) => {
         const divIcon = createBikeMarker(data.AvailableReturnBikes);
@@ -338,7 +351,6 @@ export const storeObject = {
           .bindPopup(createBikePopupObj(data), { minWidth: 270, offset: [-0, -0], className: "bike-tooltips" })
           .addTo(bikeLayer);
       })
-      removeOtherLayers(this.state, "bikeReTurnLayer");
       commit("SET_BIKE_RETURN_LAYER", bikeLayer);
     },
 
@@ -368,12 +380,40 @@ export const storeObject = {
       }).then((res) => {
         if (this.state.sortList[2].on) {
           commit("UPDATE_SPOT_DATA_LIST", res.data);
+          this.dispatch("setSpotDataOnMap", res.data);
         } else {
           commit("UPDATE_RESTAURANT_DATA_LIST", res.data);
+          this.dispatch("setRestaurantDataOnMap", res.data);
         }
       }).catch(() => {
         // 錯誤處理
       })
-    }
+    },
+
+    // 將景觀資料打上地圖
+    setSpotDataOnMap({ commit }, spotDataList) {
+      removeOtherLayers(this.state, "spotLayer");
+      let spotLayer = new L.LayerGroup().addTo(this.state.storeMap);
+      spotDataList.map((data) => {
+        L.marker([data.Position.PositionLat, data.Position.PositionLon], { icon: spotMarker() })
+          .bindPopup(data.Name, { offset: [-10, -10], className: "spot-tooltips" })
+          .openPopup()
+          .addTo(spotLayer);
+      })
+      commit("SET_SPOT_LAYER", spotLayer);
+    },
+
+    // 將餐廳資料打上地圖
+    setRestaurantDataOnMap({ commit }, spotDataList) {
+      removeOtherLayers(this.state, "restaurantLayer");
+      let restaurantLayer = new L.LayerGroup().addTo(this.state.storeMap);
+      spotDataList.map((data) => {
+        L.marker([data.Position.PositionLat, data.Position.PositionLon], { icon: spotMarker() })
+          .bindPopup(data.Name, { offset: [-10, -10], className: "spot-tooltips" })
+          .openPopup()
+          .addTo(restaurantLayer);
+      })
+      commit("SET_SPOT_LAYER", restaurantLayer);
+    },
   }
 }

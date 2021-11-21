@@ -203,4 +203,22 @@ export default {
     }
   }
 }
+
+.spot-tooltips {
+  border-radius: 8px;
+  .leaflet-popup-content-wrapper {
+    @include font-button;
+    padding: 8px 12px;
+    padding-right: 20px;
+    background-color: $alert-500;
+    color: $grey-100;
+    box-shadow: none;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+  .leaflet-popup-content {
+    margin: 0;
+  }
+}
 </style>
