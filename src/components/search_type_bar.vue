@@ -34,6 +34,7 @@
   import { mapGetters } from 'vuex';
 
   export default {
+    props: ['getCurrentPosition', 'setPosition', 'getData'],
     data () {
       return {
         leftBtnOn: true,
@@ -44,12 +45,6 @@
       ...mapGetters(['targetType', 'sortList', 'bikeDataList', 'spotDataList', 'restaurantDataList'])
     },
     methods: {
-      toggleDataType(targetIndex) {
-        this.$store.dispatch("changeSortList", targetIndex);
-        if (targetIndex === 2 || targetIndex === 3) {
-          this.$store.dispatch("getSpotDataList")
-        }
-      },
       toggleBikeDataForRent() {
         this.$store.dispatch("changeSortList", 0);
         this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
@@ -67,8 +62,8 @@
         this.$store.dispatch("setRestaurantDataOnMap", this.restaurantDataList);
       },
       locateCurrent() {
-        console.log("定位")
-      }
+        this.getCurrentPosition();
+      },
     }
   }
 </script>

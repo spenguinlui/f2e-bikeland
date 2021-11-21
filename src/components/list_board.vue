@@ -13,11 +13,18 @@
         <div>
           <i class="fas fa-sort-amount-down"></i>排序
         </div>
-        <div class="filter-select-block" v-show="sortBlock">
-          <div class="filter-select" @click.prevent.stop="sortByDistace">距離較近</div>
-          <div class="filter-select" @click.prevent.stop="sortByRent">可借車數</div>
-          <div class="filter-select" @click.prevent.stop="sortByReturn">可還車數</div>
-        </div>
+        <template v-if="targetType === 'bike'">
+          <div class="filter-select-block" v-show="sortBlock">
+            <div class="filter-select" @click.prevent.stop="sortByDistace">距離較近</div>
+            <div class="filter-select" @click.prevent.stop="sortByRent">可借車數</div>
+            <div class="filter-select" @click.prevent.stop="sortByReturn">可還車數</div>
+          </div>
+        </template>
+        <template v-if="targetType === 'route'">
+          <div class="filter-select-block" v-show="sortBlock">
+            <div class="filter-select" @click.prevent.stop="sortByRouteLength">路線長度</div>
+          </div>
+        </template>
       </div>
     </div>
     <div class="scroll-container">
@@ -43,6 +50,7 @@
   import RouteCard from "./route_card.vue";
 
   export default {
+    props: ['getCurrentPosition', 'setPosition', 'getData'],
     data () {
       return {
         containerExpand: false,
@@ -58,10 +66,8 @@
       RouteCard
     },
     methods: {
-      expandContent() {
-      },
       locateCurrent() {
-        console.log("定位")
+        this.getCurrentPosition();
       },
       sortByDistace() {
         this.$store.commit("SORT_BY_DISTANCE");
@@ -73,6 +79,10 @@
       },
       sortByReturn() {
         this.$store.commit("SORT_BY_RETURN");
+        this.sortBlock = false;
+      },
+      sortByRouteLength(){
+        this.$store.commit("SORT_BY_ROUTE_LENGTH");
         this.sortBlock = false;
       }
     }
@@ -156,11 +166,6 @@
       position: absolute;
       right: 28px;
       top: -48px; // 高 + 12px
-      .locate-tooltips {
-        position: absolute;
-        left: 0;
-        top: 40px;
-      }
       @include pad-up {
         display: none;
       }

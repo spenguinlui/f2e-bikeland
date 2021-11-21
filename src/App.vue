@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <Navbar/>
-    <SearchTypeBar/>
+    <SearchTypeBar :getCurrentPosition="getCurrentPosition" :setPosition="setPosition" :getData="getData"/>
     <template v-if="targetType === 'bike' || targetType === 'route'">
-      <ListBoard/>
+      <ListBoard :getCurrentPosition="getCurrentPosition" :setPosition="setPosition" :getData="getData"/>
     </template>
     <template v-if="targetType === 'scenicspot'">
       <ListImgBoard/>
@@ -30,6 +30,7 @@ import CenterIcon from "./assets/images/user-position.svg";
 const centerIcon = L.icon({
   iconUrl: CenterIcon,
   iconSize: [40, 40],
+  iconAnchor: [20, 20]
 })
 
 export default {
@@ -40,7 +41,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['targetType', 'storeMap', 'bikeDataList'])
+    ...mapGetters(['targetType', 'sortList', 'storeMap', 'bikeDataList'])
   },
   methods: {
     getCurrentPosition() {
@@ -49,10 +50,12 @@ export default {
           this.setPosition(position);
           this.getData();              // 取得定位後再要一次資料
         }, () => {
+          window.alert("無定位，預設定位於台北車站")
           // 拿不到當下位置就用預設座標跑
           this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
         })
       } else {
+        window.alert("無定位，預設定位於台北車站")
         // 拿不到當下位置就用預設座標跑
         this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
       }
@@ -72,14 +75,32 @@ export default {
       this.$store.dispatch("getBikeDataList", true);
     },
     getData() {
-      this.$store.dispatch("getBikeDataList");
+      if (this.targetType === 'bike') {
+        if (this.sortList[0].on) {
+          // 只有自行車站取資料跟打地圖分開
+          this.$store.dispatch("getBikeDataList");
+          this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
+          // console.log("跑了借車")
+        } else {
+          this.$store.dispatch("getBikeDataList");
+          this.$store.dispatch("setBikeReTurnDataOnMap", this.bikeDataList);
+          // console.log("跑了還車")
+        }
+      } else if (this.targetType === 'route') {
+        this.$store.dispatch("getRouteDataList");
+        // console.log("跑了路線")
+      } else if (this.targetType === 'scenicspot') {
+        this.$store.dispatch("getSpotDataList"); // 判斷寫在 store 了
+        // console.log("跑了景點")
+      }
     },
     initMap() {
-      let map = L.map('map').setView([25.046951, 121.516887], 16);
+      let map = L.map('map', { zoomControl: false }).setView([25.046951, 121.516887], 16);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         opacity: 0.5
       }).addTo(map);
+      L.control.zoom({ position: 'topright' }).addTo(map);
       this.$store.commit("SET_MAP_OBJECT", map);
     },
   },
@@ -98,7 +119,7 @@ export default {
     // 取得座標
     this.getCurrentPosition();
 
-    // 之後每 15秒更新資訊 -- 先不實裝
+    // 之後每 15秒更新資訊 -- 先不實裝(點重新定位就好了)
     // window.setInterval(() => { this.getData() }, 15000);
   },
   mounted() {
@@ -121,6 +142,10 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+  top: $nav-bar-m-height;
+  @include screen-up {
+    top: $nav-bar-height;
+  }
   z-index: -1;
 }
 

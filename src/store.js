@@ -45,6 +45,25 @@ const cityHash = {
   "TNN": "Tainan",
   "CYI": "Chiayi"
 }
+
+const geometryStrToGeoJson = (geometryStr) => {
+  let featureType = geometryStr.substr(0, 15);
+  let corStr = geometryStr.slice(18, -2);
+  let corNewAry = []
+  corStr.split(',').map((cor) => {
+    let cs = cor.split(' ');
+    cs = cs.map((c) => {
+      return parseFloat(c)
+    })
+  corNewAry.push(cs)
+  })
+  return {
+    "type": featureType,
+    "coordinates": corNewAry
+  }
+}
+
+
 const countChangeClass = (dataCount) => {
   const calssName = dataCount === 0 ? 'disable' : dataCount < 5 ? 'limit' : 'default';
   return calssName
@@ -67,6 +86,7 @@ const spotMarker = () => {
   return L.icon({
     iconUrl: SpotIcon,
     iconSize: [62, 62],
+    iconAnchor: [31, 62]
   })
 }
 
@@ -199,12 +219,10 @@ export const storeObject = {
     // 更新景點資料
     UPDATE_SPOT_DATA_LIST(state, data) {
       state.spotDataList = data;
-      console.log(state.spotDataList)
     },
     // 更新餐廳資料
     UPDATE_RESTAURANT_DATA_LIST(state, data) {
       state.restaurantDataList = data;
-      console.log(state.restaurantDataList)
     },
     // 依照距離位置排序
     SORT_BY_DISTANCE(state) {
@@ -218,10 +236,13 @@ export const storeObject = {
     SORT_BY_RETURN(state) {
       state.bikeDataList = state.bikeDataList.sort((a, b) => b.AvailableReturnBikes - a.AvailableReturnBikes)
     },
+    // 依照路線總長排序
+    SORT_BY_ROUTE_LENGTH(state) {
+      state.routeDataList = state.routeDataList.sort((a, b) => b.CyclingLength - a.CyclingLength)
+    },
     // 更換 mobile 版本景點資料
     CHECKOUT_M_CONTENT(state, index) {
       if (this.state.sortList[2].on) {
-        console.log(this.state.spotDataList[index])
         state.mContentData = this.state.spotDataList[index];
       } else {
         state.mContentData = this.state.restaurantDataList[index];
@@ -241,6 +262,9 @@ export const storeObject = {
     },
     SET_BIKE_RETURN_LAYER(state, layer) {
       state.mapLayers.bikeReTurnLayer = layer;
+    },
+    SET_BIKE_ROUTE_LAYER(state, layer) {
+      state.mapLayers.bikeRouteLayer = layer;
     },
     SET_SPOT_LAYER(state, layer) {
       state.mapLayers.spotLayer = layer;
@@ -357,16 +381,52 @@ export const storeObject = {
     // 取得自行車路線資料
     getRouteDataList({ commit }){
       const header = api.authorizationHeader();
-      if (this.state.currentCity) { return } // 沒有可選定縣市就不用繼續查了
+      if (!this.state.currentCity) { return } // 沒有可選定縣市就不用繼續查了
       axios({
         method: 'get',
         url: api.urlQueryStr(`Cycling/Shape/${this.state.currentCity}`, { top: 30 }),
         headers: header
       }).then((res) => {
         commit("UPDATE_ROUTE_DATA_LIST", res.data);
+        this.dispatch("setRouteDataOnMap", res.data);
       }).catch(() => {
         // 錯誤處理
       })
+    },
+
+    // 將自行車路線打上地圖
+    setRouteDataOnMap({ commit }, routeDataList) {
+      removeOtherLayers(this.state, "bikeRouteLayer");
+
+      let bikeRouteLayer = new L.FeatureGroup().addTo(this.state.storeMap);
+      routeDataList.map((data) => {
+        const coordinates = geometryStrToGeoJson(data.Geometry).coordinates;
+        const geoJsonData = [{
+          "type": "LineString", // 多線打不進去，只能先轉單線看看
+          "coordinates": coordinates
+        }];
+        const lineStyle = {
+          "color": "#E75578",
+          "weight": 7
+        };
+        const startPoint = coordinates[0];
+        const endPoint = coordinates[coordinates.length - 1];
+        L.marker([startPoint[1], startPoint[0]], { icon: spotMarker() })
+          .bindPopup(data.RoadSectionStart, { offset: [80, 10], className: "spot-tooltips" })
+          .openPopup()
+          .addTo(bikeRouteLayer);
+        L.marker([endPoint[1], endPoint[0]], { icon: spotMarker() })
+          .bindPopup(data.RoadSectionEnd, { offset: [80, 10], className: "spot-tooltips" })
+          .openPopup()
+          .addTo(bikeRouteLayer);
+        try {
+          L.geoJSON(geoJsonData, lineStyle).addTo(bikeRouteLayer);
+        } catch {
+          console.log("加入 gejson 失敗, 資料過大");  // 好像太多陣列會掛掉
+        }
+      })
+
+      commit("SET_BIKE_ROUTE_LAYER", bikeRouteLayer);
     },
 
     // 取得景點資料

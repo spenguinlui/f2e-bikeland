@@ -14,7 +14,7 @@
     },
     methods: {
       goSearch() {
-        console.log("開始搜尋")
+        window.alert("未實作");
       }
     }
   }

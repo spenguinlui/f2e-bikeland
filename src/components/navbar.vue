@@ -19,7 +19,7 @@
         <div class="nav-m-block" @click="checkoutRouteMap"><div class="btn-text-icon"><i class="fas fa-route" :class="{ active: targetType === 'route' }"></i>找路線</div></div>
         <div class="nav-m-block" @click="checkoutSpotMap"><div class="btn-text-icon" :class="{ active: targetType === 'scenicspot' }"><i class="fas fa-umbrella"></i>找景點</div></div>
       </div>
-      <div class="nav-m-connect btn-text-icon"><i class="fas fa-phone-alt"></i>聯絡單車客服</div>
+      <a href="tel:1999"></a><div class="nav-m-connect btn-text-icon"><i class="fas fa-phone-alt"></i>聯絡單車客服</div>
     </div>
   </div>
 </template>
