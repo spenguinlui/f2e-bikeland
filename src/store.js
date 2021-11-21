@@ -1,5 +1,6 @@
 import axios from 'axios';
 import api from "./helper/api";
+import L from 'leaflet';
 
 const roundX = (val, precision) => Math.round(Math.round(val * Math.pow(10, (precision || 0) + 1)) / 10) / Math.pow(10, (precision || 0));
 
@@ -63,18 +64,21 @@ export const storeObject = {
     currentCity: '',
     routeDataList: [],
     spotDataList: [],
-    restaurantDataList: []
+    restaurantDataList: [],
+    storeMap: null
   },
   getters: {
     targetType: state => state.targetType,
     sortList: state => state.sortList,
+    position: state => state.position,
     expandMContent: state => state.expandMContent,
     mContentData: state => state.mContentData,
     bikeDataList: state => state.bikeDataList,
     routeDataList: state => state.routeDataList,
     spotDataList: state => state.spotDataList,
     restaurantDataList: state => state.restaurantDataList,
-    isLoading: state => state.isLoading
+    isLoading: state => state.isLoading,
+    storeMap: state => state.storeMap
   },
   mutations: {
     // 切換搜尋類型 找單車/找路線/找景點
@@ -142,6 +146,9 @@ export const storeObject = {
     // 有空在做
     DATA_LOADING(state, isLoading) {
       state.isLoading = isLoading;
+    },
+    SET_MAP_OBJECT(state, map) {
+      state.storeMap = map
     }
   },
   actions: {
@@ -204,7 +211,9 @@ export const storeObject = {
             if (findData) data = {...data, ...findData}
             data.StationName.Zh_tw = data.StationName.Zh_tw.replace("YouBike1.0_", "1.0");
             data.StationName.Zh_tw = data.StationName.Zh_tw.replace("YouBike2.0_", "2.0");
-            data.Distance = distance(data.StationPosition.PositionLat, data.StationPosition.PositionLon, this.state.position.latitude, this.state.position.longitude);
+            const lat = data.StationPosition.PositionLat;
+            const lon = data.StationPosition.PositionLon;
+            data.Distance = distance(lat, lon, this.state.position.latitude, this.state.position.longitude);
             data.DistanceZH = distanceZh(data.Distance);
             return data;
           })
@@ -252,6 +261,9 @@ export const storeObject = {
       }).catch(() => {
         // 錯誤處理
       })
+    },
+    setMakerToMap() {
+      L.marker(["25.046951", "121.516887"]).addTo(this.state.storeMap)
     }
   }
 }
