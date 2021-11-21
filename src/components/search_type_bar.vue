@@ -146,7 +146,7 @@
     }
   }
 
-  @include mobile {
+  @include pad-m {
     .search-type-bar-container {
       left: calc(50% - (((#{$search-type-btn-m-width} * 2) + (#{$search-type-btn-m-padding-x} * 2)) / 2));
       top: $nav-bar-m-height + 12px;

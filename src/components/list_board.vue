@@ -93,17 +93,13 @@
   @import "@/assets/scss/main.scss";
   
   .list-container {
-    width: $list-board-width;
-    height: calc(100% - #{$nav-bar-height} - 72px);
     position: fixed;
-    @include pad-up {
-      left: 32px;
-      top: $nav-bar-m-height + 36px;
-    }
-    @include screen-up {
-      top: $nav-bar-height + 36px;
-    }
-    @include mobile {
+    background-color: $grey-100;
+    box-shadow: $card-show;
+    border-radius: 8px;
+    padding: 28px 32px;
+    z-index: 5;
+    @include pad-m {
       width: 100%;
       height: $list-board-m-height;
       bottom: 0;
@@ -112,11 +108,12 @@
         height: 488px;
       }
     }
-    background-color: $grey-100;
-    box-shadow: $card-show;
-    border-radius: 8px;
-    padding: 28px 32px;
-    z-index: 5;
+    @include screen-up {
+      width: $list-board-width;
+      height: calc(100% - #{$nav-bar-height} - 72px);
+      left: 32px;
+      top: $nav-bar-height + 36px;
+    }
     .expand-btn {
       @include expand-btn;
     }
@@ -166,7 +163,7 @@
       position: absolute;
       right: 28px;
       top: -48px; // 高 + 12px
-      @include pad-up {
+      @include screen-up {
         display: none;
       }
     }

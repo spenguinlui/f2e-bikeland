@@ -125,7 +125,7 @@
     }
   }
 
-  @include mobile {
+  @include pad-m {
     .card-container {
       @include card-container;
       border-bottom: 0px;

@@ -46,7 +46,7 @@
   @import "@/assets/scss/main.scss";
 
   .m-content-container {
-    @include pad-up {
+    @include screen-up {
       display: none;
     }
     position: fixed;

@@ -53,17 +53,23 @@
   @import "@/assets/scss/main.scss";
 
   .list-container {
+    position: fixed;
     width: $list-board-width;
     height: calc(100% - #{$nav-bar-height} - 72px);
-    position: fixed;
-    @include pad-up {
-      left: 32px;
-      top: $nav-bar-m-height + 36px;
-    }
+    // @include pad-up {
+      //   top: $nav-bar-m-height + 36px;
+    // }
     @include screen-up {
+      left: 32px;
       top: $nav-bar-height + 36px;
     }
-    @include mobile {
+    // @include mobile {
+    //   width: 100%;
+    //   height: $list-img-board-m-height;
+    //   bottom: 0;
+    //   padding-bottom: 0;
+    // }
+    @include pad-m {
       width: 100%;
       height: $list-img-board-m-height;
       bottom: 0;
@@ -86,7 +92,7 @@
     .scroll-row-container {
       overflow: auto;
       height: 87%;
-      @include mobile {
+      @include pad-m {
         @include flex-row-start-center;
         height: auto;
         gap: 10px;
@@ -101,7 +107,7 @@
       position: absolute;
       right: 28px;
       top: -48px; // 高 + 12px
-      @include pad-up {
+      @include screen-up {
         display: none;
       }
     }

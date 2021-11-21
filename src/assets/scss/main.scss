@@ -34,7 +34,9 @@ svg[class*="fa-"] {
 @mixin card-img {
   width: 100%;
   height: $card-img-height;
-  @include mobile {
+  overflow: hidden;
+  @include pad-m {
+    width: 100%;
     height: $card-img-m-height;
   }
   .brand {
@@ -51,6 +53,12 @@ svg[class*="fa-"] {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: all .5s ease;
+    &:hover {
+      transform: scale(1.2,1.2);
+      transform-origin: center;
+      object-fit: cover;
+    }
   }
 }
 
@@ -71,12 +79,15 @@ svg[class*="fa-"] {
     margin: 0;
   }
   @if $showmode == 0 {
-    @include pad-up {
+    @include screen-up {
       display: none;
     }
   }
   @if $showmode != 0 {
     @include mobile {
+      display: none;
+    }
+    @include pad {
       display: none;
     }
   }
