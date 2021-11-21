@@ -1,8 +1,8 @@
 <template>
-  <div :class="contentExpand ? 'content-container' : 'content-container hide'">
-    <div @click="() => { contentExpand = !contentExpand }" class="expand-btn">
-      <div v-show="contentExpand"><i class="fas fa-angle-double-down"></i></div>
-      <div v-show="!contentExpand"><i class="fas fa-angle-double-up"></i></div>
+  <div class="content-container" :class="{ hide: !expandMContent }">
+    <div @click="toggleMContent" class="expand-btn">
+      <div v-show="expandMContent"><i class="fas fa-angle-double-down"></i></div>
+      <div v-show="!expandMContent"><i class="fas fa-angle-double-up"></i></div>
     </div>
     <div class="content-block">
       <div class="content-title">{{ mContentData.Name }}</div>
@@ -34,10 +34,12 @@
       }
     },
     computed: {
-      ...mapGetters(['mContentData'])
+      ...mapGetters(['expandMContent', 'mContentData'])
     },
     methods: {
-      
+      toggleMContent() {
+        this.$store.dispatch("toggleMContent", !this.expandMContent);
+      }
     }
   }
 </script>
@@ -108,7 +110,7 @@
       }
     }
   }
-  @include mobile {
+  @include pad-m {
     .content-container {
       display: none;
     }
