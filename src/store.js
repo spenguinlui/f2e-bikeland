@@ -43,6 +43,74 @@ const cityHash = {
   "TNN": "Tainan",
   "CYI": "Chiayi"
 }
+const countChangeClass = (dataCount) => {
+  const calssName = dataCount === 0 ? 'disable' : dataCount < 5 ? 'limit' : 'default';
+  return calssName
+}
+
+const createBikeMarker = (dataCount) => {
+  const markerIcon = countChangeClass(dataCount);
+  return new L.DivIcon(
+    {
+      className: 'bike-maker-icon-dafault',
+      html: `
+        <div class="bike-maker-icon ${markerIcon}">
+          <span class="bike-maker-icon-text">${dataCount}</span>
+        </div>
+      `
+    })
+}
+
+const createBikePopupObj = (data) => {
+  return `
+    <div class="tooltips-title">${data.StationName.Zh_tw}</div>
+    <div class="tooltips-content">
+      <div class="block-left">
+        <div class="bike-block ${countChangeClass(data.AvailableRentBikes)}"><i class="fas fa-bicycle"></i>${data.AvailableRentBikes}</div>
+        <div class="stop-block ${countChangeClass(data.AvailableReturnBikes)}"><i class="fas fa-parking"></i>${data.AvailableReturnBikes}</div>
+      </div>
+      <div class="block-right"><i class="fas fa-map-marker-alt"></i>距離 ${data.DistanceZH}</div>
+    </div>
+  `
+}
+
+// 移除指定 Layer 以外的 其他 Layer
+const removeOtherLayers = (state, layerName) => {
+  switch (layerName) {
+    case 'bikeRentLayer':
+      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
+      break;
+    case 'bikeReTurnLayer':
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
+      break;
+    case 'bikeRouteLayer':
+      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
+      break;
+    case 'spotLayer':
+      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
+      break;
+    case 'restaurantLayer':
+      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
+      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
+      break;
+    default:
+      break;
+  }
+}
 
 export const storeObject = {
   state: {
@@ -65,7 +133,14 @@ export const storeObject = {
     routeDataList: [],
     spotDataList: [],
     restaurantDataList: [],
-    storeMap: null
+    storeMap: null,
+    mapLayers: {
+      bikeRentLayer: null,
+      bikeReTurnLayer: null,
+      bikeRouteLayer: null,
+      spotLayer: null,
+      restaurantLayer: null
+    }
   },
   getters: {
     targetType: state => state.targetType,
@@ -147,8 +222,16 @@ export const storeObject = {
     DATA_LOADING(state, isLoading) {
       state.isLoading = isLoading;
     },
+    // 將地圖物件存放到 store
     SET_MAP_OBJECT(state, map) {
-      state.storeMap = map
+      state.storeMap = map;
+    },
+    // 存放 layer 物件
+    SET_BIKE_RENT_LAYER(state, layer) {
+      state.mapLayers.bikeRentLayer = layer;
+    },
+    SET_BIKE_RETURN_LAYER(state, layer) {
+      state.mapLayers.bikeReTurnLayer = layer;
     }
   },
   actions: {
@@ -184,7 +267,7 @@ export const storeObject = {
       commit("TOGGLE_M_CONTENT_SHOW", toggle);
     },
     // 取得自行車資料列表
-    getBikeDataList({ commit }) {
+    getBikeDataList({ commit }, init = false) {
       commit("DATA_LOADING", true);
       const stationQuery = { position: this.state.position, select: ['StationUID', 'AuthorityID','StationName', 'StationPosition'] }
       const availabilityQuery = { position: this.state.position, select: ['StationUID', 'AvailableRentBikes', 'AvailableReturnBikes'] }
@@ -216,8 +299,11 @@ export const storeObject = {
             data.Distance = distance(lat, lon, this.state.position.latitude, this.state.position.longitude);
             data.DistanceZH = distanceZh(data.Distance);
             return data;
-          })
+          });
           commit("UPDATE_BIKE_DATA_LIST", avaDataList);
+          if (!init) {
+            this.dispatch("setBikeRentDataOnMap", avaDataList);
+          }
           commit("DATA_LOADING", false);
         }).catch(() => {
           // 錯誤處理
@@ -227,6 +313,33 @@ export const storeObject = {
         // 錯誤處理
         commit("DATA_LOADING", false);
       })
+    },
+
+    // 將自行車租借資料打上地圖
+    setBikeRentDataOnMap({ commit }, bikeDataList) {
+      let bikeLayer = new L.LayerGroup().addTo(this.state.storeMap);
+      bikeDataList.map((data) => {
+        const divIcon = createBikeMarker(data.AvailableRentBikes);
+        L.marker([data.StationPosition.PositionLat, data.StationPosition.PositionLon], { icon: divIcon })
+        .bindPopup(createBikePopupObj(data), { minWidth: 270, offset: [-0, -0], className: "bike-tooltips" })
+          .openPopup()
+          .addTo(bikeLayer);
+      })
+      removeOtherLayers(this.state, "bikeRentLayer");
+      commit("SET_BIKE_RENT_LAYER", bikeLayer);
+    },
+
+    // 將自行車還車資料打上地圖
+    setBikeReTurnDataOnMap({ commit }, bikeDataList) {
+      let bikeLayer = new L.LayerGroup().addTo(this.state.storeMap);
+      bikeDataList.map((data) => {
+        const divIcon = createBikeMarker(data.AvailableReturnBikes);
+        L.marker([data.StationPosition.PositionLat, data.StationPosition.PositionLon], { icon: divIcon })
+          .bindPopup(createBikePopupObj(data), { minWidth: 270, offset: [-0, -0], className: "bike-tooltips" })
+          .addTo(bikeLayer);
+      })
+      removeOtherLayers(this.state, "bikeReTurnLayer");
+      commit("SET_BIKE_RETURN_LAYER", bikeLayer);
     },
 
     // 取得自行車路線資料
@@ -261,9 +374,6 @@ export const storeObject = {
       }).catch(() => {
         // 錯誤處理
       })
-    },
-    setMakerToMap() {
-      L.marker(["25.046951", "121.516887"]).addTo(this.state.storeMap)
     }
   }
 }

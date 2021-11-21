@@ -26,35 +26,11 @@ import Content from "./components/content.vue";
 import MContent from "./components/m_content.vue";
 
 import CenterIcon from "./assets/images/user-position.svg";
-// import BikeMakerIconDefault from "./assets/images/bike-maker-icon-default.svg";
-// import BikeMakerIconLimit from "./assets/images/bike-maker-icon-limit.svg";
-// import BikeMakerIconDisable from "./assets/images/bike-maker-icon-disable.svg";
 
 const centerIcon = L.icon({
   iconUrl: CenterIcon,
-  iconSize:     [38, 95],
-  iconAnchor:   [22, 94],
-  popupAnchor:  [-3, -76]
+  iconSize: [40, 40],
 })
-
-// const bikeMakerIconDefault = L.icon({
-//   iconUrl: BikeMakerIconDefault,
-//   iconSize:     [38, 95],
-//   iconAnchor:   [22, 94],
-//   popupAnchor:  [-3, -76]
-// })
-// const bikeMakerIconLimit = L.icon({
-//   iconUrl: BikeMakerIconLimit,
-//   iconSize:     [38, 95],
-//   iconAnchor:   [22, 94],
-//   popupAnchor:  [-3, -76]
-// })
-// const bikeMakerIconDisable = L.icon({
-//   iconUrl: BikeMakerIconDisable,
-//   iconSize:     [38, 95],
-//   iconAnchor:   [22, 94],
-//   popupAnchor:  [-3, -76]
-// })
 
 export default {
   name: 'App',
@@ -72,13 +48,13 @@ export default {
         navigator.geolocation.getCurrentPosition((position) => {
           this.setPosition(position);
           this.getData();              // 取得定位後再要一次資料
-        }, (error) => {
-          this.getData();
-          console.log("定位失敗", error);  // 做失敗處置
+        }, () => {
+          // 拿不到當下位置就用預設座標跑
+          this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
         })
       } else {
-        this.getData();
-        console.log("無法使用定位") // 做失敗處置
+        // 拿不到當下位置就用預設座標跑
+        this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
       }
     },
     setPosition(position) {
@@ -92,9 +68,11 @@ export default {
       L.marker([lat, lon], { icon: centerIcon }).addTo(this.storeMap);
       this.storeMap.flyTo([position.coords.latitude, position.coords.longitude], 16)
     },
+    getInitData() {
+      this.$store.dispatch("getBikeDataList", true);
+    },
     getData() {
       this.$store.dispatch("getBikeDataList");
-      this.setBikeDataOnMap();
     },
     initMap() {
       let map = L.map('map').setView([25.046951, 121.516887], 16);
@@ -104,27 +82,6 @@ export default {
       }).addTo(map);
       this.$store.commit("SET_MAP_OBJECT", map);
     },
-    setBikeDataOnMap() {
-      if (this.bikeDataList.length > 0) {
-        // const bikeLayer = L.LayerGroup().addTo(this.storeMap);
-        this.bikeDataList.map((data) => {
-          const markerIcon = data.AvailableRentBikes === 0 ? 'disable' : data.AvailableRentBikes < 5 ? 'limit' : 'default';
-          const divIcon = new L.DivIcon(
-            {
-              className: 'bike-maker-icon-dafault',
-              html: `
-                <div class="bike-maker-icon ${markerIcon}">
-                  <span class="bike-maker-icon-text">${data.AvailableRentBikes}</span>
-                </div>
-              `
-            })
-          L.marker([data.StationPosition.PositionLat, data.StationPosition.PositionLon], { icon: divIcon })
-            .bindPopup(data.StationName.Zh_tw)
-            .openPopup()
-            .addTo(this.storeMap);
-        })
-      }
-    }
   },
   components: {
     Navbar,
@@ -136,20 +93,16 @@ export default {
   },
   created() {
     // 創立元件要資料 - 已預設地點防止沒定位功能
-    this.getData();
+    this.getInitData();
 
     // 取得座標
     this.getCurrentPosition();
 
-    // 之後每 15秒更新資訊
-    window.setInterval(() => { this.getData() }, 15000);
+    // 之後每 15秒更新資訊 -- 先不實裝
+    // window.setInterval(() => { this.getData() }, 15000);
   },
   mounted() {
-    // #map 掛上去後初始化 Map
     this.initMap();
-    // 在 store 增加方法
-
-    // this.$store.dispatch("setMakerToMap");
   }
 }
 
@@ -194,6 +147,60 @@ export default {
     top: 16px;
     @include font-h5;
     color: inherit;
+  }
+}
+.bike-tooltips {
+  width: 344px;
+  // height: 96px;
+  .leaflet-popup-content-wrapper {
+    box-shadow: none;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+  .leaflet-popup-content {
+    margin: 0;
+  }
+  background-color: $grey-100;
+  border: 2px solid $primary-300;
+  box-shadow: $card-show;
+  border-radius: 8px;
+  padding: 16px 24px;
+  @include flex-column-center-baseline;
+  .tooltips-title {
+    @include font-content(1);
+    color: $primary-500;
+    margin: 8px 0;
+  }
+  .tooltips-content {
+    @include flex-row-space-between-center;
+    width: 100%;
+    .block-left {
+      @include flex-row-center-center;
+      .bike-block, .stop-block {
+        padding: 4px 12px;
+        background-color: $primary-100;
+        @include font-button(1);
+        color: $primary-500;
+        border-radius: 4px;
+        &.limit {
+          background-color: $alert-100;
+          color: $alert-500;
+        }
+        &.disable {
+          background-color: $grey-200;
+          color: $grey-500;
+        }
+      }
+      .bike-block {
+        margin-right: 12px;
+      }
+    }
+    .block-right {
+      @include font-button;
+      font-weight: 500;
+      color: $grey-500;
+    }
   }
 }
 </style>

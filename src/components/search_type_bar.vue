@@ -9,12 +9,12 @@
             'on-right': targetType === 'bike' ? sortList[1].on : sortList[3].on }
         "></div>
         <template v-if="targetType === 'bike'">
-          <div @click="toggleDataType(0)" class="btn-left" :class="{ active: sortList[0].on, off: !sortList[0].on }"><i class="fas fa-bicycle"></i>找單車</div>
-          <div @click="toggleDataType(1)" class="btn-right" :class="{ active: sortList[1].on, off: !sortList[1].on }"><i class="fas fa-parking"></i>找車位</div>
+          <div @click="toggleBikeDataForRent" class="btn-left" :class="{ active: sortList[0].on, off: !sortList[0].on }"><i class="fas fa-bicycle"></i>找單車</div>
+          <div @click="toggleBikeDataForReturn" class="btn-right" :class="{ active: sortList[1].on, off: !sortList[1].on }"><i class="fas fa-parking"></i>找車位</div>
         </template>
         <template v-if="targetType === 'scenicspot'">
-          <div @click="toggleDataType(2)" class="btn-left" :class="{ active: sortList[2].on, off: !sortList[2].on }"><i class="fas fa-bicycle"></i>找景點</div>
-          <div @click="toggleDataType(3)" class="btn-right" :class="{ active: sortList[3].on, off: !sortList[3].on }"><i class="fas fa-parking"></i>找餐廳</div>
+          <div @click="toggleDataType(2)" class="btn-left" :class="{ active: sortList[2].on, off: !sortList[2].on }"><i class="fas fa-umbrella-beach"></i>找景點</div>
+          <div @click="toggleDataType(3)" class="btn-right" :class="{ active: sortList[3].on, off: !sortList[3].on }"><i class="fas fa-utensils"></i>找餐廳</div>
         </template>
       </div>
     </div>
@@ -41,12 +41,22 @@
       }
     },
     computed: {
-      ...mapGetters(['targetType', 'sortList'])
+      ...mapGetters(['targetType', 'sortList', 'bikeDataList'])
     },
     methods: {
       toggleDataType(targetIndex) {
         this.$store.dispatch("changeSortList", targetIndex);
-        if (targetIndex === 2 || targetIndex === 3) { this.$store.dispatch("getSpotDataList") }
+        if (targetIndex === 2 || targetIndex === 3) {
+          this.$store.dispatch("getSpotDataList")
+        }
+      },
+      toggleBikeDataForRent() {
+        this.$store.dispatch("changeSortList", 0);
+        this.$store.dispatch("setBikeRentDataOnMap", this.bikeDataList);
+      },
+      toggleBikeDataForReturn() {
+        this.$store.dispatch("changeSortList", 1);
+        this.$store.dispatch("setBikeReTurnDataOnMap", this.bikeDataList);
       },
       locateCurrent() {
         console.log("定位")
