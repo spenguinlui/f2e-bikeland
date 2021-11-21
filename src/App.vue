@@ -29,8 +29,8 @@ import CenterIcon from "./assets/images/user-position.svg";
 
 const centerIcon = L.icon({
   iconUrl: CenterIcon,
-  iconSize: [40, 40],
-  iconAnchor: [20, 20]
+  iconSize: [75, 75],
+  iconAnchor: [37, 37]
 })
 
 export default {
