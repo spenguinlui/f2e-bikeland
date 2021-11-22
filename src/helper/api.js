@@ -17,12 +17,17 @@ const authorizationHeader = () => {
 const urlQueryStr = (dataType, query = null) => {
   let queryStr = "";
   if (query.position) {
-    queryStr += `&$spatialFilter=nearby(${query.position.latitude},${query.position.longitude},1000)`;
+    if (dataType === "Tourism/ScenicSpot" || dataType === "Tourism/Restaurant") {
+      queryStr += `&$spatialFilter=nearby(Position, ${query.position.latitude},${query.position.longitude},1000)`;
+    } else {
+      queryStr += `&$spatialFilter=nearby(${query.position.latitude},${query.position.longitude},1000)`;
+    }
     // if (query.select) {
     //   queryStr += '&$select=';
     //   query.select.map((s) => queryStr += `${s},`);
     // }
   }
+
   if (query.top) queryStr += `&$top=${query.top}`;
 
   // ..其他的參數在這處理

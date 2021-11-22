@@ -59,6 +59,7 @@
       },
       toggleRestaurantData() {
         this.$store.dispatch("changeSortList", 3);
+        this.$store.dispatch("getSpotDataList");
         this.$store.dispatch("setRestaurantDataOnMap", this.restaurantDataList);
       },
       locateCurrent() {

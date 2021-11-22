@@ -104,41 +104,12 @@ const createBikePopupObj = (data) => {
 }
 
 // 移除指定 Layer 以外的 其他 Layer
-const removeOtherLayers = (state, layerName) => {
-  switch (layerName) {
-    case 'bikeRentLayer':
-      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
-      break;
-    case 'bikeReTurnLayer':
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
-      break;
-    case 'bikeRouteLayer':
-      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
-      break;
-    case 'spotLayer':
-      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.restaurantLayer)) state.storeMap.removeLayer(state.mapLayers.restaurantLayer);
-      break;
-    case 'restaurantLayer':
-      if (state.storeMap.hasLayer(state.mapLayers.bikeReTurnLayer)) state.storeMap.removeLayer(state.mapLayers.bikeReTurnLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRouteLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRouteLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.spotLayer)) state.storeMap.removeLayer(state.mapLayers.spotLayer);
-      if (state.storeMap.hasLayer(state.mapLayers.bikeRentLayer)) state.storeMap.removeLayer(state.mapLayers.bikeRentLayer);
-      break;
-    default:
-      break;
-  }
+const removeOtherLayers = (state) => {
+  state.storeMap.eachLayer(function(layer){ 
+    if (!(layer instanceof L.TileLayer)) {
+      if (layer.options.layerName !== 'center') { state.storeMap.removeLayer(layer) }
+    }
+  });
 }
 
 export const storeObject = {
@@ -268,6 +239,11 @@ export const storeObject = {
     },
     SET_SPOT_LAYER(state, layer) {
       state.mapLayers.spotLayer = layer;
+    },
+    REMOVE_OLD_CENTER(state) {
+      state.storeMap.eachLayer(function(layer){ 
+        if (layer.options.layerName === 'center') { state.storeMap.removeLayer(layer) }
+      });
     }
   },
   actions: {
@@ -297,6 +273,9 @@ export const storeObject = {
     // 定位目前位置
     setCurrentPosition({ commit }, position) {
       if (position) commit("SET_POSITION", position)
+    },
+    removeOldCenter({ commit }) {
+      commit("REMOVE_OLD_CENTER");
     },
     // 切換 mobile 景點內容顯示
     toggleMContent({ commit }, toggle) {

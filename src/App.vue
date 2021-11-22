@@ -68,7 +68,8 @@ export default {
       this.$store.dispatch("setCurrentPosition", currentPosition);
 
       // 地圖更新及移動位置
-      L.marker([lat, lon], { icon: centerIcon }).addTo(this.storeMap);
+      this.$store.dispatch("removeOldCenter");
+      L.marker([lat, lon], { icon: centerIcon, layerName: 'center' }).addTo(this.storeMap);
       this.storeMap.flyTo([position.coords.latitude, position.coords.longitude], 16)
     },
     getInitData() {
