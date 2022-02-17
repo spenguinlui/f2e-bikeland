@@ -3,6 +3,8 @@
 The F2E 自行車道地圖資訊整合網，串接交通部 PTX 資料，達到找尋公用自行車站點等相關資訊。
 作品為 RWD 環境
 
+> ＊ 大部分功能已移至 [f2e-bustop](https://github.com/spenguinlui/f2e-bustop) 整合
+
 ## 網站 Demo
 [https://spenguinlui.github.io/f2e-bikeland/](https://spenguinlui.github.io/f2e-bikeland/)
 
